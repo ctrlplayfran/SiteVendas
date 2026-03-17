@@ -72,21 +72,43 @@
   }
   .logo { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.2em; color:var(--fg); }
   .nav-items {
-    display:flex; gap:20px;
+    display:flex; gap:12px;
     font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
     list-style:none; pointer-events:all;
   }
-  .nav-items li { cursor:none; opacity:.6; transition:opacity .2s; position:relative; padding:4px 0; }
-  .nav-items li::after { content:''; position:absolute; bottom:0; left:50%; width:0; height:1px; background:var(--fg); transition:width .3s,left .3s; }
-  .nav-items li:hover { opacity:1; }
-  .nav-items li:hover::after { width:100%; left:0; }
+
+  /* ── NAV BUTTONS — pill border style (like "Sobre mim") ── */
+  .nav-items li {
+    cursor: none;
+    opacity: 1;
+    transition: opacity .2s, background .25s, color .25s;
+    position: relative;
+    padding: 7px 16px;
+    border: 1px solid rgba(240,236,228,.35);
+    border-radius: 999px;
+    background: rgba(8,8,8,.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--fg);
+    letter-spacing: .18em;
+  }
+  .nav-items li:hover {
+    opacity: 1;
+    background: rgba(200,184,154,.18);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  /* Remove the old underline pseudo-element */
+  .nav-items li::after { display: none; }
+
   #cart-count { margin-left:4px; color:var(--accent); }
 
   /* Hide Portfólio on very small screens */
   @media (max-width: 480px) {
     #portfolio-btn { display: none; }
     header { padding: 18px 16px; }
-    .nav-items { gap: 16px; }
+    .nav-items { gap: 8px; }
+    .nav-items li { padding: 6px 12px; font-size: 10px; }
   }
 
   /* ── Center Title ── */
@@ -97,7 +119,7 @@
   }
   #center-title h1 {
     font-family:'Bebas Neue',sans-serif;
-    font-size:clamp(44px,10vw,130px); letter-spacing:-.01em; line-height:.9; color:var(--fg);
+    font-size:clamp(34px,7.5vw,90px); letter-spacing:-.01em; line-height:.9; color:var(--fg);
   }
   #center-title .sub {
     font-family:'Barlow Condensed',sans-serif;
@@ -152,12 +174,15 @@
   }
   .strip-overlay { position:absolute; inset:0; background:var(--bg); opacity:.25; transition:opacity .5s; z-index:3; pointer-events:none; }
   .strip-fill { position:absolute; inset:0; z-index:0; }
+
+  /* ── Strip number moved to BOTTOM, above the label ── */
   .strip-num {
-    position:absolute; top:24px; left:20px;
+    position:absolute; bottom:80px; left:20px;
     font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.25em; text-transform:uppercase;
     opacity:.5; transition:opacity .4s,color .4s; z-index:10; color:var(--fg);
     text-shadow:0 2px 4px rgba(0,0,0,.6);
   }
+
   .strip-label {
     position:absolute; bottom:36px; left:20px; right:20px; z-index:10;
     opacity:.85; transition:opacity .4s .1s;
@@ -232,7 +257,7 @@
       justify-content: flex-start;
       overflow-y: auto;
     }
-    #exp-close { top: 16px; right: 16px; font-size: 10px; }
+    #exp-close { top: 16px; right: 16px; font-size: 10px; padding: 6px 14px; }
   }
   @media (min-width: 768px) and (max-width: 1023px) {
     #exp-info { width: min(380px, 45vw); padding: 60px 32px; }
@@ -249,6 +274,7 @@
     font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase;
     padding:14px 28px; margin-top:24px; cursor:none; transition:background .3s,color .3s; opacity:0; width:fit-content;
     -webkit-tap-highlight-color: transparent;
+    border-radius: 4px;
   }
   #exp-add-to-cart:hover { background:var(--accent); color:var(--bg); }
   /* Full-width CTA on mobile */
@@ -258,11 +284,21 @@
   #exp-close {
     position:absolute; top:24px; right:24px;
     font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase;
-    color:var(--fg); cursor:none; opacity:.5; transition:opacity .2s;
+    color:var(--fg); cursor:none; opacity:1;
+    transition:background .25s, border-color .25s, color .25s;
     -webkit-tap-highlight-color: transparent;
-    padding: 8px; /* bigger tap area */
+    padding: 7px 18px;
+    border: 1px solid rgba(240,236,228,.35);
+    border-radius: 999px;
+    background: rgba(8,8,8,.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
-  #exp-close:hover { opacity:1; }
+  #exp-close:hover {
+    background: rgba(200,184,154,.18);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 
   /* ── Cart Sidebar ── */
   #cart-sidebar {
@@ -457,8 +493,6 @@ for(let s=0;s<SETS;s++){
 // ─────────────────────────────────────────
 // INFINITE SCROLL
 // ─────────────────────────────────────────
-// One set = 6 strips × 33.333vw = 200vw
-// Animate translateX from 0 → -(1 set px), then instantly reset → seamless
 const N_PROJ  = projects.length;
 const SET_VW  = N_PROJ * (100/3);
 let scrollPx  = 0;
@@ -494,14 +528,13 @@ document.getElementById('strips-viewport').addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
   touchStartScrollPx = scrollPx;
   isSwiping = true;
-  speed = 0; // freeze during drag
+  speed = 0;
 }, { passive: true });
 
 document.getElementById('strips-viewport').addEventListener('touchmove', e => {
   if (!isSwiping) return;
   const dx = e.touches[0].clientX - touchStartX;
   scrollPx = touchStartScrollPx + dx;
-  // keep in bounds
   const limit = setW();
   if(scrollPx <= -limit) scrollPx += limit;
   if(scrollPx > 0) scrollPx -= limit;
@@ -512,11 +545,9 @@ document.getElementById('strips-viewport').addEventListener('touchend', e => {
   if (!isSwiping) return;
   isSwiping = false;
   const dx = e.changedTouches[0].clientX - touchStartX;
-  // Small tap (< 8px) = open project; larger = swipe, resume scroll
   if (Math.abs(dx) < 8) {
     // handled by click event on strip
   } else {
-    // momentum: snap to nearest strip with a short animation
     const stripW = window.innerWidth * (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--strip-w')) / 100);
     const snapped = Math.round(scrollPx / stripW) * stripW;
     const start = scrollPx, target = snapped;
@@ -558,7 +589,7 @@ const chars=splitLetters(document.getElementById('main-title'));
 // ─────────────────────────────────────────
 // ARROW BUTTONS
 // ─────────────────────────────────────────
-const JUMP_PX = () => window.innerWidth / 3; // one strip width
+const JUMP_PX = () => window.innerWidth / 3;
 
 function scrollBy(dir) {
   const jump = JUMP_PX() * dir;
@@ -585,6 +616,7 @@ function scrollBy(dir) {
 
 document.getElementById('arrow-left').addEventListener('click',  () => scrollBy(-1));
 document.getElementById('arrow-right').addEventListener('click', () => scrollBy(1));
+
 // ─────────────────────────────────────────
 const expView  =document.getElementById('expanded-view');
 const expImage =document.getElementById('exp-image');
