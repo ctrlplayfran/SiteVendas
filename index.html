@@ -15,8 +15,7 @@
     --bg: #080808;
     --fg: #f0ece4;
     --accent: #c8b89a;
-    --muted: #2a2a2a;
-    --strip-w: calc(100vw / 6);
+    --strip-w: 33.333vw;
   }
 
   html, body {
@@ -28,531 +27,291 @@
     cursor: none;
   }
 
-  /* ── Custom Cursor ── */
+  /* ── Custom Cursor — hidden on touch ── */
   #cursor {
     position: fixed; top: 0; left: 0;
     pointer-events: none; z-index: 9999;
     mix-blend-mode: difference;
   }
   #cursor-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--fg);
-    position: absolute;
-    transform: translate(-50%, -50%);
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--fg); position: absolute;
+    transform: translate(-50%,-50%);
     transition: width .2s, height .2s;
   }
   #cursor-ring {
     width: 40px; height: 40px;
-    border: 1px solid rgba(240,236,228,.4);
-    border-radius: 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    transition: width .3s, height .3s, opacity .3s, border-color .3s;
+    border: 1px solid rgba(240,236,228,.4); border-radius: 50%;
+    position: absolute; transform: translate(-50%,-50%);
+    transition: width .3s, height .3s, opacity .3s;
   }
   #cursor-label {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: var(--bg);
-    background: var(--fg);
-    padding: 4px 10px;
-    border-radius: 20px;
-    position: absolute;
-    transform: translate(-50%, 28px);
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity .2s;
+    font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--bg); background: var(--fg);
+    padding: 4px 10px; border-radius: 20px;
+    position: absolute; transform: translate(-50%,28px);
+    white-space: nowrap; opacity: 0; transition: opacity .2s;
   }
   body.hovering-strip #cursor-dot { width: 4px; height: 4px; }
   body.hovering-strip #cursor-ring { width: 80px; height: 80px; opacity: 0; }
   body.hovering-strip #cursor-label { opacity: 1; }
 
+  @media (pointer: coarse) {
+    body { cursor: auto; }
+    #cursor { display: none; }
+    .strip, .nav-items li, .nav-arrow, #exp-close, #exp-add-to-cart,
+    #cart-menu, #cart-close, #cart-checkout, .cart-item-remove { cursor: pointer; }
+  }
+
   /* ── Header ── */
   header {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex; justify-content: space-between; align-items: flex-start;
-    padding: 32px 40px;
-    pointer-events: none;
-    mix-blend-mode: exclusion;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 20px; pointer-events: none; mix-blend-mode: exclusion;
   }
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: .2em;
-    color: var(--fg);
-  }
-  /* Menu estilizado como botões */
+  .logo { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.2em; color:var(--fg); }
   .nav-items {
-    display: flex; gap: 32px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: .2em;
-    text-transform: uppercase;
-    list-style: none;
-    pointer-events: all;
+    display:flex; gap:20px;
+    font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
+    list-style:none; pointer-events:all;
   }
-  .nav-items li {
-    cursor: none;
-    opacity: .6;
-    transition: opacity .2s;
-    position: relative;
-    padding: 4px 0;
-  }
-  .nav-items li::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 1px;
-    background: var(--fg);
-    transition: width 0.3s ease, left 0.3s ease;
-  }
-  .nav-items li:hover {
-    opacity: 1;
-  }
-  .nav-items li:hover::after {
-    width: 100%;
-    left: 0;
-  }
-  /* Para o carrinho, manter o contador */
-  #cart-count {
-    margin-left: 4px;
-    font-weight: 400;
-    color: var(--accent);
+  .nav-items li { cursor:none; opacity:.6; transition:opacity .2s; position:relative; padding:4px 0; }
+  .nav-items li::after { content:''; position:absolute; bottom:0; left:50%; width:0; height:1px; background:var(--fg); transition:width .3s,left .3s; }
+  .nav-items li:hover { opacity:1; }
+  .nav-items li:hover::after { width:100%; left:0; }
+  #cart-count { margin-left:4px; color:var(--accent); }
+
+  /* Hide Portfólio on very small screens */
+  @media (max-width: 480px) {
+    #portfolio-btn { display: none; }
+    header { padding: 18px 16px; }
+    .nav-items { gap: 16px; }
   }
 
   /* ── Center Title ── */
   #center-title {
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 50;
-    pointer-events: none;
-    text-align: center;
-    mix-blend-mode: exclusion;
+    position: fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    z-index:50; pointer-events:none; text-align:center; mix-blend-mode:exclusion;
+    width: 90vw;
   }
   #center-title h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(60px, 10vw, 130px);
-    letter-spacing: -.01em;
-    line-height: .9;
-    color: var(--fg);
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(44px,10vw,130px); letter-spacing:-.01em; line-height:.9; color:var(--fg);
   }
   #center-title .sub {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    letter-spacing: .4em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-top: 14px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:11px; letter-spacing:.4em; text-transform:uppercase; color:var(--accent); margin-top:14px;
   }
-  .char { display: inline-block; }
+  .char { display:inline-block; }
 
-  /* ── Strips Container ── */
-  #strips {
-    position: fixed; inset: 0;
+  /* ── Strips Viewport ── */
+  #strips-viewport {
+    position: fixed; inset:0; overflow:hidden; z-index:1;
+  }
+
+  /* ── Strips Track ── */
+  #strips-track {
     display: flex;
+    height: 100%;
+    position: absolute; top:0; left:0;
+    will-change: transform;
   }
 
   /* ── Individual Strip ── */
   .strip {
-    flex: 1;
+    flex-shrink: 0;
+    width: var(--strip-w);
+    height: 100%;
     position: relative;
     overflow: hidden;
     cursor: none;
     border-right: 1px solid rgba(240,236,228,.06);
-    transition: flex .7s cubic-bezier(.76,0,.24,1);
+    transition: width .6s cubic-bezier(.76,0,.24,1);
   }
-  .strip:last-child { border-right: none; }
+  .strip:hover { width: calc(var(--strip-w) * 1.15); }
+  .strip:hover .strip-img { opacity:.85; filter:grayscale(0) brightness(1); transform:scale(1); }
+  .strip:hover .strip-num { opacity:1; color:var(--accent); }
+  .strip:hover .strip-label { opacity:1; }
+  .strip:hover .strip-overlay { opacity:.1; }
 
-  /* Hover no desktop: imagem colorida e mais opaca */
-  .strip:hover {
-    flex: 2.5;
+  /* Mobile: 1 strip visible at a time */
+  @media (max-width: 767px) {
+    :root { --strip-w: 82vw; }
+    .strip:hover { width: var(--strip-w); } /* no expand on touch */
   }
-  .strip:hover .strip-img {
-    opacity: 0.9;
-    filter: grayscale(0) brightness(1);
-    transform: scale(1);
-  }
-  .strip:hover .strip-num {
-    opacity: 1;
-    color: var(--accent);
-  }
-  .strip:hover .strip-label {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .strip:hover .strip-overlay {
-    opacity: 0.15;
-  }
-  .strip:hover .strip-canvas {
-    opacity: 1;
+  @media (min-width: 768px) and (max-width: 1023px) {
+    :root { --strip-w: 50vw; }
   }
 
-  /* Estado ativo no mobile (simula hover) */
-  .strip.touch-hover {
-    flex: 2.5;
-  }
-  .strip.touch-hover .strip-img {
-    opacity: 0.9;
-    filter: grayscale(0) brightness(1);
-    transform: scale(1);
-  }
-  .strip.touch-hover .strip-num {
-    opacity: 1;
-    color: var(--accent);
-  }
-  .strip.touch-hover .strip-label {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .strip.touch-hover .strip-overlay {
-    opacity: 0.15;
-  }
-  .strip.touch-hover .strip-canvas {
-    opacity: 1;
-  }
-
-  /* strip canvas (WebGL) */
-  .strip-canvas {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    opacity: 0.8;
-    transition: opacity .5s;
-    z-index: 1;
-  }
-
-  /* imagens locais - P&B e transparentes */
+  .strip-canvas { display:none; }
   .strip-img {
-    position: absolute; inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.25;
-    transition: opacity .5s, transform .8s cubic-bezier(.76,0,.24,1), filter .5s;
-    transform: scale(1.02);
-    filter: grayscale(1) brightness(0.8) contrast(1.1);
-    z-index: 2;
+    position:absolute; inset:0; background-size:cover; background-position:center;
+    opacity:.55; transition:opacity .5s,transform .8s cubic-bezier(.76,0,.24,1),filter .5s;
+    transform:scale(1.03); filter:grayscale(.6) brightness(.85) contrast(1.1); z-index:2;
   }
-
-  .strip-overlay {
-    position: absolute; inset: 0;
-    background: var(--bg);
-    opacity: 0.2;
-    transition: opacity .5s;
-    z-index: 3;
-    pointer-events: none;
-  }
-
-  .strip-fill {
-    position: absolute; inset: 0;
-    transition: opacity .5s;
-    z-index: 0;
-  }
-
+  .strip-overlay { position:absolute; inset:0; background:var(--bg); opacity:.25; transition:opacity .5s; z-index:3; pointer-events:none; }
+  .strip-fill { position:absolute; inset:0; z-index:0; }
   .strip-num {
-    position: absolute;
-    top: 32px; left: 24px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: .25em;
-    text-transform: uppercase;
-    opacity: 0.6;
-    transition: opacity .4s, color .4s;
-    z-index: 10;
-    color: var(--fg);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    position:absolute; top:24px; left:20px;
+    font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+    opacity:.5; transition:opacity .4s,color .4s; z-index:10; color:var(--fg);
+    text-shadow:0 2px 4px rgba(0,0,0,.6);
   }
   .strip-label {
-    position: absolute;
-    bottom: 40px; left: 24px; right: 24px;
-    z-index: 10;
-    opacity: 0.9;
-    transform: translateY(0);
-    transition: opacity .4s .1s, transform .4s .1s;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    position:absolute; bottom:36px; left:20px; right:20px; z-index:10;
+    opacity:.85; transition:opacity .4s .1s;
+    text-shadow:0 2px 12px rgba(0,0,0,.8);
   }
-  .strip-label h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(22px, 2.5vw, 36px);
-    letter-spacing: .04em;
-    line-height: 1;
-    color: var(--fg);
+  .strip-label h3 { font-family:'Bebas Neue',sans-serif; font-size:clamp(22px,5vw,42px); letter-spacing:.04em; line-height:1; color:var(--fg); }
+  .strip-label p { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-top:5px; }
+
+  /* ── Edge vignettes ── */
+  #vignette-left, #vignette-right {
+    position:fixed; top:0; bottom:0; width:80px; z-index:10; pointer-events:none;
   }
-  .strip-label p {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-top: 6px;
-    opacity: 0.9;
+  #vignette-left  { left:0;  background:linear-gradient(to right,var(--bg) 0%,transparent 100%); }
+  #vignette-right { right:0; background:linear-gradient(to left, var(--bg) 0%,transparent 100%); }
+  @media (max-width: 767px) {
+    #vignette-left, #vignette-right { width: 40px; }
+  }
+
+  /* ── Nav Arrows ── */
+  .nav-arrow {
+    position: fixed; top: 50%; z-index: 20;
+    transform: translateY(-50%);
+    width: 44px; height: 44px;
+    border: 1px solid rgba(240,236,228,.25);
+    border-radius: 50%;
+    background: rgba(8,8,8,.6);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: none;
+    opacity: 0;
+    transition: opacity .3s, border-color .3s, background .3s;
+    pointer-events: all;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #arrow-left  { left: 12px; }
+  #arrow-right { right: 12px; }
+  .nav-arrow svg { width: 16px; height: 16px; stroke: var(--fg); stroke-width: 1.5; fill: none; transition: stroke .3s; }
+  body:not(.expanded) .nav-arrow { opacity: .55; }
+  .nav-arrow:hover { opacity: 1 !important; border-color: var(--accent); background: rgba(200,184,154,.12); }
+  .nav-arrow:hover svg { stroke: var(--accent); }
+  body.expanded .nav-arrow { opacity: 0; pointer-events: none; }
+
+  /* Bigger tap target on mobile */
+  @media (max-width: 767px) {
+    .nav-arrow { width: 52px; height: 52px; }
+    .nav-arrow svg { width: 18px; height: 18px; }
+    #arrow-left  { left: 8px; }
+    #arrow-right { right: 8px; }
   }
 
   /* ── Expanded View ── */
   #expanded-view {
-    position: fixed; inset: 0;
-    z-index: 200;
-    background: var(--bg);
-    opacity: 0;
-    pointer-events: none;
-    display: flex;
+    position:fixed; inset:0; z-index:200; background:var(--bg); opacity:0; pointer-events:none; display:flex;
   }
-  #expanded-view.active { pointer-events: all; }
-  #exp-image {
-    flex: 1;
-    background-size: cover;
-    background-position: center;
-    filter: grayscale(0);
-    transition: filter 0.5s;
-  }
+  #expanded-view.active { pointer-events:all; }
+  #exp-image { flex:1; background-size:cover; background-position:center; min-height: 240px; }
   #exp-info {
-    width: min(480px, 38vw);
-    padding: 80px 48px;
-    display: flex; flex-direction: column; justify-content: flex-end;
-    border-left: 1px solid rgba(240,236,228,.08);
+    width:min(480px,38vw); padding:80px 48px;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    border-left:1px solid rgba(240,236,228,.08);
   }
-  #exp-count {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: .3em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 24px;
-    opacity: 0;
+
+  /* Mobile: stack image on top, info below */
+  @media (max-width: 767px) {
+    #expanded-view { flex-direction: column; overflow-y: auto; }
+    #exp-image { flex: 0 0 45vh; width: 100%; min-height: 200px; }
+    #exp-info {
+      width: 100%; padding: 28px 24px 36px;
+      border-left: none;
+      border-top: 1px solid rgba(240,236,228,.08);
+      flex: 1;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+    #exp-close { top: 16px; right: 16px; font-size: 10px; }
   }
-  #exp-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(48px, 5vw, 80px);
-    line-height: .9;
-    color: var(--fg);
-    overflow: hidden;
+  @media (min-width: 768px) and (max-width: 1023px) {
+    #exp-info { width: min(380px, 45vw); padding: 60px 32px; }
   }
-  #exp-title span { display: block; transform: translateY(100%); }
-  #exp-category {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: .3em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-top: 18px;
-    opacity: 0;
-  }
-  #exp-desc {
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px; line-height: 1.7;
-    color: rgba(240,236,228,.55);
-    margin-top: 24px;
-    opacity: 0;
-  }
-  #exp-price {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 28px;
-    color: var(--accent);
-    margin-top: 24px;
-    opacity: 0;
-  }
+
+  #exp-count { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; opacity:0; }
+  #exp-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,5vw,80px); line-height:.9; color:var(--fg); overflow:hidden; }
+  #exp-title span { display:block; transform:translateY(100%); }
+  #exp-category { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--accent); margin-top:14px; opacity:0; }
+  #exp-desc { font-family:'Barlow',sans-serif; font-size:13px; line-height:1.7; color:rgba(240,236,228,.55); margin-top:16px; opacity:0; }
+  #exp-price { font-family:'Bebas Neue',sans-serif; font-size:26px; color:var(--accent); margin-top:16px; opacity:0; }
   #exp-add-to-cart {
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--fg);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    padding: 16px 32px;
-    margin-top: 32px;
-    cursor: none;
-    transition: background .3s, color .3s;
-    opacity: 0;
-    width: fit-content;
+    background:transparent; border:1px solid var(--accent); color:var(--fg);
+    font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase;
+    padding:14px 28px; margin-top:24px; cursor:none; transition:background .3s,color .3s; opacity:0; width:fit-content;
+    -webkit-tap-highlight-color: transparent;
   }
-  #exp-add-to-cart:hover {
-    background: var(--accent);
-    color: var(--bg);
+  #exp-add-to-cart:hover { background:var(--accent); color:var(--bg); }
+  /* Full-width CTA on mobile */
+  @media (max-width: 767px) {
+    #exp-add-to-cart { width: 100%; text-align: center; padding: 16px; margin-top: 20px; }
   }
   #exp-close {
-    position: absolute; top: 36px; right: 40px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 11px; letter-spacing: .3em;
-    text-transform: uppercase;
-    color: var(--fg);
-    cursor: none;
-    opacity: .5;
-    transition: opacity .2s;
+    position:absolute; top:24px; right:24px;
+    font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--fg); cursor:none; opacity:.5; transition:opacity .2s;
+    -webkit-tap-highlight-color: transparent;
+    padding: 8px; /* bigger tap area */
   }
-  #exp-close:hover { opacity: 1; }
+  #exp-close:hover { opacity:1; }
 
-  /* ── Carrinho Sidebar ── */
+  /* ── Cart Sidebar ── */
   #cart-sidebar {
-    position: fixed;
-    top: 0; right: 0;
-    width: min(400px, 85vw);
-    height: 100vh;
-    background: var(--bg);
-    border-left: 1px solid rgba(240,236,228,.1);
-    z-index: 300;
-    transform: translateX(100%);
-    transition: transform .6s cubic-bezier(.76,0,.24,1);
-    display: flex;
-    flex-direction: column;
-    padding: 40px 24px;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+    position:fixed; top:0; right:0; width:min(400px,92vw); height:100vh;
+    background:var(--bg); border-left:1px solid rgba(240,236,228,.1);
+    z-index:300; transform:translateX(100%);
+    transition:transform .5s cubic-bezier(.76,0,.24,1);
+    display:flex; flex-direction:column; padding:32px 20px;
+    box-shadow:-10px 0 30px rgba(0,0,0,.5);
   }
-  #cart-sidebar.open {
-    transform: translateX(0);
-  }
-  #cart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    border-bottom: 1px solid rgba(240,236,228,.1);
-    padding-bottom: 20px;
-  }
-  #cart-close {
-    cursor: none;
-    opacity: .5;
-    transition: opacity .2s;
-  }
-  #cart-close:hover { opacity: 1; }
-  #cart-items {
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 20px;
-  }
-  .cart-item {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    border-bottom: 1px solid rgba(240,236,228,.05);
-    padding-bottom: 16px;
-  }
-  .cart-item-img {
-    width: 60px;
-    height: 60px;
-    background-size: cover;
-    background-position: center;
-    filter: grayscale(0.5);
-  }
-  .cart-item-info {
-    flex: 1;
-  }
-  .cart-item-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    letter-spacing: .05em;
-  }
-  .cart-item-category {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    letter-spacing: .15em;
-    color: var(--accent);
-    margin: 4px 0;
-  }
-  .cart-item-price {
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    color: var(--fg);
-  }
-  .cart-item-remove {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px;
-    letter-spacing: .15em;
-    color: rgba(240,236,228,.3);
-    cursor: none;
-    transition: color .2s;
-    margin-top: 4px;
-    display: inline-block;
-  }
-  .cart-item-remove:hover {
-    color: #ff5e5e;
-  }
-  #cart-footer {
-    border-top: 1px solid rgba(240,236,228,.1);
-    padding-top: 20px;
-  }
-  #cart-total {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 16px;
-    letter-spacing: .1em;
-    margin-bottom: 24px;
-  }
-  #cart-checkout {
-    background: var(--accent);
-    border: none;
-    color: var(--bg);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    padding: 16px 0;
-    width: 100%;
-    cursor: none;
-    transition: opacity .3s;
-  }
-  #cart-checkout:hover {
-    opacity: 0.8;
-  }
-  #cart-empty {
-    font-family: 'Barlow', sans-serif;
-    color: rgba(240,236,228,.3);
-    text-align: center;
-    margin-top: 40px;
-  }
-
-  /* ── Progress Bar ── */
-  #progress {
-    position: fixed; bottom: 0; left: 0;
-    height: 1px; width: 0;
-    background: var(--accent);
-    z-index: 400;
-    transition: none;
-  }
+  #cart-sidebar.open { transform:translateX(0); }
+  #cart-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; border-bottom:1px solid rgba(240,236,228,.1); padding-bottom:16px; }
+  #cart-close { cursor:none; opacity:.5; transition:opacity .2s; padding: 8px; }
+  #cart-close:hover { opacity:1; }
+  #cart-items { flex:1; overflow-y:auto; margin-bottom:16px; -webkit-overflow-scrolling: touch; }
+  .cart-item { display:flex; gap:14px; margin-bottom:20px; border-bottom:1px solid rgba(240,236,228,.05); padding-bottom:14px; }
+  .cart-item-img { width:56px; height:56px; flex-shrink:0; background-size:cover; background-position:center; filter:grayscale(.5); }
+  .cart-item-info { flex:1; min-width:0; }
+  .cart-item-title { font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:.05em; }
+  .cart-item-category { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:.15em; color:var(--accent); margin:3px 0; }
+  .cart-item-price { font-family:'Barlow',sans-serif; font-size:13px; color:var(--fg); }
+  .cart-item-remove { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:.15em; color:rgba(240,236,228,.3); cursor:pointer; transition:color .2s; margin-top:4px; display:inline-block; padding: 4px 0; }
+  .cart-item-remove:hover { color:#ff5e5e; }
+  #cart-footer { border-top:1px solid rgba(240,236,228,.1); padding-top:16px; }
+  #cart-total { display:flex; justify-content:space-between; font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.1em; margin-bottom:20px; }
+  #cart-checkout { background:var(--accent); border:none; color:var(--bg); font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; padding:16px 0; width:100%; cursor:pointer; transition:opacity .3s; -webkit-tap-highlight-color:transparent; }
+  #cart-checkout:hover { opacity:.8; }
+  #cart-empty { font-family:'Barlow',sans-serif; color:rgba(240,236,228,.3); text-align:center; margin-top:40px; font-size:13px; }
 
   /* ── Loader ── */
-  #loader {
-    position: fixed; inset: 0;
-    background: var(--bg);
-    z-index: 1000;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 20px;
-  }
-  #loader-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 80px; color: var(--fg);
-  }
-  #loader-bar-wrap {
-    width: 200px; height: 1px;
-    background: rgba(240,236,228,.12);
-  }
-  #loader-bar {
-    height: 100%;
-    background: var(--accent);
-    width: 0;
-  }
+  #loader { position:fixed; inset:0; background:var(--bg); z-index:1000; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:20px; }
+  #loader-num { font-family:'Bebas Neue',sans-serif; font-size:80px; color:var(--fg); }
+  #loader-bar-wrap { width:180px; height:1px; background:rgba(240,236,228,.12); }
+  #loader-bar { height:100%; background:var(--accent); width:0; }
 </style>
 </head>
 <body>
 
-<!-- Loader -->
 <div id="loader">
   <div id="loader-num">0</div>
   <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
 </div>
 
-<!-- Custom Cursor -->
 <div id="cursor">
   <div id="cursor-dot"></div>
   <div id="cursor-ring"></div>
   <div id="cursor-label">Ver Projeto</div>
 </div>
 
-<!-- Header -->
 <header>
   <div class="logo">Hybridbots</div>
   <ul class="nav-items">
@@ -562,16 +321,25 @@
   </ul>
 </header>
 
-<!-- Center Title -->
 <div id="center-title">
   <h1 id="main-title">ADQUIRA<br>NOSSOS PROJETOS</h1>
   <p class="sub">Hybridbots</p>
 </div>
 
-<!-- Strips -->
-<div id="strips"></div>
+<div id="strips-viewport">
+  <div id="strips-track"></div>
+</div>
 
-<!-- Expanded Project View -->
+<div id="vignette-left"></div>
+<div id="vignette-right"></div>
+
+<button class="nav-arrow" id="arrow-left" aria-label="Anterior">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+<button class="nav-arrow" id="arrow-right" aria-label="Próximo">
+  <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+</button>
+
 <div id="expanded-view">
   <div id="exp-image"></div>
   <div id="exp-info">
@@ -585,7 +353,6 @@
   <div id="exp-close">← Fechar</div>
 </div>
 
-<!-- Carrinho Sidebar -->
 <div id="cart-sidebar">
   <div id="cart-header">
     <span>Seu carrinho</span>
@@ -593,482 +360,331 @@
   </div>
   <div id="cart-items"></div>
   <div id="cart-footer">
-    <div id="cart-total">
-      <span>Total</span>
-      <span id="cart-total-value">R$ 0</span>
-    </div>
+    <div id="cart-total"><span>Total</span><span id="cart-total-value">R$ 0</span></div>
     <button id="cart-checkout">Finalizar compra</button>
   </div>
 </div>
 
-<div id="progress"></div>
-
 <script>
 // ─────────────────────────────────────────
-// DATA (com preço)
+// DATA
 // ─────────────────────────────────────────
 const projects = [
-  {
-    title: 'ARCHVAULT',
-    category: 'Identidade Visual',
-    desc: 'Sistema de identidade para um estúdio de arquitetura contemporânea. Tipografia estrutural, paleta mineral e linguagem de formas geométricas tensionadas.',
-    color: '#1a1612',
-    hue: '25deg',
-    saturation: '15%',
-    image: 'imgs/proj_08.webp',
-    price: 199.90
-  },
-  {
-    title: 'FLUX STUDIO',
-    category: 'Motion & Branding',
-    desc: 'Direção de arte para uma plataforma de animação. O conceito explora movimento como matéria-prima criativa, traduzido em um sistema visual dinâmico.',
-    color: '#0f1318',
-    hue: '210deg',
-    saturation: '20%',
-    image: 'imgs/proj_10.webp',
-    price: 249.90
-  },
-  {
-    title: 'NOIRE',
-    category: 'Editorial & Fotografia',
-    desc: 'Direção criativa de um editorial de moda minimalista. Composições em alto contraste e espacialidade narrativa que dialoga com a forma e o vazio.',
-    color: '#120f12',
-    hue: '290deg',
-    saturation: '12%',
-    image: 'imgs/proj_09.webp',
-    price: 179.90
-  },
-  {
-    title: 'TERRAIN',
-    category: 'Instalação Interativa',
-    desc: 'Projeto de instalação imersiva para um festival de arte digital. WebGL + sensores de profundidade criando topografias reativas em tempo real.',
-    color: '#0e1410',
-    hue: '140deg',
-    saturation: '18%',
-    image: 'imgs/proj_04.webp',
-    price: 299.90
-  },
-  {
-    title: 'ECHO',
-    category: 'Interface & UX',
-    desc: 'Design de produto para um aplicativo de meditação e bem-estar sonoro. Microinterações que imitam ritmos respiratórios e frequências biauriculares.',
-    color: '#13100f',
-    hue: '20deg',
-    saturation: '14%',
-    image: 'imgs/proj_05.webp',
-    price: 219.90
-  },
-  {
-    title: 'CANVAS',
-    category: 'Plataforma Digital',
-    desc: 'Redesign completo de uma plataforma de criação colaborativa. Foco em acessibilidade, performance e uma linguagem visual que empurra o limite do funcional.',
-    color: '#0f0f13',
-    hue: '240deg',
-    saturation: '16%',
-    image: 'imgs/proj_06.webp',
-    price: 189.90
-  }
+  { title:'ARCHVAULT',  category:'Identidade Visual',     desc:'Sistema de identidade para um estúdio de arquitetura contemporânea. Tipografia estrutural, paleta mineral e linguagem de formas geométricas tensionadas.',                color:'#2a1f14', accent2:'#6b4c2a', image:'imgs/proj_08.jpg', price:199.90 },
+  { title:'FLUX STUDIO',category:'Motion & Branding',     desc:'Direção de arte para uma plataforma de animação. O conceito explora movimento como matéria-prima criativa, traduzido em um sistema visual dinâmico.',               color:'#0d1a26', accent2:'#1a4a6b', image:'imgs/proj_10.jpg', price:249.90 },
+  { title:'NOIRE',      category:'Editorial & Fotografia',desc:'Direção criativa de um editorial de moda minimalista. Composições em alto contraste e espacialidade narrativa que dialoga com a forma e o vazio.',                  color:'#1e1020', accent2:'#4a1a5c', image:'imgs/proj_09.jpg', price:179.90 },
+  { title:'TERRAIN',    category:'Instalação Interativa', desc:'Projeto de instalação imersiva para um festival de arte digital. WebGL + sensores de profundidade criando topografias reativas em tempo real.',                     color:'#0e1f10', accent2:'#1a5c20', image:'imgs/proj_04.jpg', price:299.90 },
+  { title:'ECHO',       category:'Interface & UX',        desc:'Design de produto para um aplicativo de meditação e bem-estar sonoro. Microinterações que imitam ritmos respiratórios e frequências biauriculares.',                color:'#1f1510', accent2:'#5c3018', image:'imgs/proj_05.jpg', price:219.90 },
+  { title:'CANVAS',     category:'Plataforma Digital',    desc:'Redesign completo de uma plataforma de criação colaborativa. Foco em acessibilidade, performance e uma linguagem visual que empurra o limite do funcional.',        color:'#101020', accent2:'#252550', image:'imgs/proj_06.jpg', price:189.90 }
 ];
 
 // ─────────────────────────────────────────
-// CARRINHO (estado)
+// CURSOR
 // ─────────────────────────────────────────
-let cart = []; // cada item: { id, title, category, image, price, quantity }
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){
+  rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
+  document.getElementById('cursor').style.transform=`translate(${mx}px,${my}px)`;
+  document.getElementById('cursor-ring').style.transform=`translate(${rx-mx-20}px,${ry-my-20}px)`;
+  requestAnimationFrame(tick);
+})();
 
-function addToCart(project) {
-  const existing = cart.find(item => item.id === project.title);
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({
-      id: project.title,
-      title: project.title,
-      category: project.category,
-      image: project.image,
-      price: project.price,
-      quantity: 1
-    });
-  }
+// ─────────────────────────────────────────
+// CART
+// ─────────────────────────────────────────
+let cart=[];
+function addToCart(p){
+  const e=cart.find(i=>i.id===p.title);
+  if(e) e.quantity++;
+  else cart.push({id:p.title,title:p.title,category:p.category,image:p.image,price:p.price,quantity:1});
   updateCartUI();
-  openCartSidebar();
+  setTimeout(()=>openCartSidebar(),50);
 }
-
-function removeFromCart(projectTitle) {
-  cart = cart.filter(item => item.id !== projectTitle);
-  updateCartUI();
-}
-
-function updateCartUI() {
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  document.getElementById('cart-count').textContent = totalItems;
-
-  const cartItemsEl = document.getElementById('cart-items');
-  if (cart.length === 0) {
-    cartItemsEl.innerHTML = '<div id="cart-empty">Seu carrinho está vazio</div>';
-  } else {
-    let html = '';
-    cart.forEach(item => {
-      html += `
-        <div class="cart-item">
-          <div class="cart-item-img" style="background-image: url('${item.image}')"></div>
-          <div class="cart-item-info">
-            <div class="cart-item-title">${item.title}</div>
-            <div class="cart-item-category">${item.category}</div>
-            <div class="cart-item-price">R$ ${item.price.toFixed(2)} x ${item.quantity}</div>
-            <span class="cart-item-remove" data-id="${item.id}">Remover</span>
-          </div>
-        </div>
-      `;
-    });
-    cartItemsEl.innerHTML = html;
-
-    document.querySelectorAll('.cart-item-remove').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const id = e.target.dataset.id;
-        removeFromCart(id);
-      });
-    });
+function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); updateCartUI(); }
+function updateCartUI(){
+  document.getElementById('cart-count').textContent=cart.reduce((a,i)=>a+i.quantity,0);
+  const el=document.getElementById('cart-items');
+  if(!cart.length){ el.innerHTML='<div id="cart-empty">Seu carrinho está vazio</div>'; }
+  else{
+    el.innerHTML=cart.map(i=>`<div class="cart-item"><div class="cart-item-img" style="background-image:url('${i.image}')"></div><div class="cart-item-info"><div class="cart-item-title">${i.title}</div><div class="cart-item-category">${i.category}</div><div class="cart-item-price">R$ ${i.price.toFixed(2)} x ${i.quantity}</div><span class="cart-item-remove" data-id="${i.id}">Remover</span></div></div>`).join('');
+    el.querySelectorAll('.cart-item-remove').forEach(b=>b.addEventListener('click',e=>removeFromCart(e.target.dataset.id)));
   }
-
-  const total = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  document.getElementById('cart-total-value').textContent = `R$ ${total.toFixed(2)}`;
+  document.getElementById('cart-total-value').textContent=`R$ ${cart.reduce((a,i)=>a+i.price*i.quantity,0).toFixed(2)}`;
 }
+const cartSidebar=document.getElementById('cart-sidebar');
+const cartMenu=document.getElementById('cart-menu');
+document.getElementById('cart-close').addEventListener('click',e=>{e.stopPropagation();cartSidebar.classList.remove('open');});
+cartMenu.addEventListener('click',e=>{e.stopPropagation();cartSidebar.classList.add('open');});
+document.addEventListener('click',e=>{if(!cartSidebar.contains(e.target)&&!cartMenu.contains(e.target))cartSidebar.classList.remove('open');});
+function openCartSidebar(){cartSidebar.classList.add('open');}
 
-// Controle da sidebar
-const cartSidebar = document.getElementById('cart-sidebar');
-const cartMenu = document.getElementById('cart-menu');
-const cartClose = document.getElementById('cart-close');
-
-function openCartSidebar() {
-  cartSidebar.classList.add('open');
-}
-function closeCartSidebar() {
-  cartSidebar.classList.remove('open');
-}
-cartMenu.addEventListener('click', (e) => {
-  e.stopPropagation();
-  openCartSidebar();
-});
-cartClose.addEventListener('click', closeCartSidebar);
-document.addEventListener('click', (e) => {
-  if (!cartSidebar.contains(e.target) && !cartMenu.contains(e.target) && cartSidebar.classList.contains('open')) {
-    closeCartSidebar();
-  }
-});
-
-// ─────────────────────────────────────────
-// AÇÕES DOS BOTÕES DO MENU
-// ─────────────────────────────────────────
-document.getElementById('portfolio-btn').addEventListener('click', () => {
-  // Abre o portfólio externo em uma nova aba
-  window.open('https://ctrlplayfran.github.io/Portfolio-Hybridbots-Francielly/', '_blank');
-});
-
-document.getElementById('whatsapp-btn').addEventListener('click', () => {
-  // Link para o WhatsApp (substitua pelo número desejado)
-  window.open('https://wa.me/5511999999999', '_blank');
-});
-
-// ─────────────────────────────────────────
-// CUSTOM CURSOR
-// ─────────────────────────────────────────
-const cursorDot = document.getElementById('cursor-dot');
-const cursorRing = document.getElementById('cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-function animateCursor() {
-  rx += (mx - rx) * .15; ry += (my - ry) * .15;
-  const cursor = document.getElementById('cursor');
-  cursor.style.transform = `translate(${mx}px, ${my}px)`;
-  cursorRing.style.transform = `translate(${rx - mx - 20}px, ${ry - my - 20}px)`;
-  requestAnimationFrame(animateCursor);
-}
-animateCursor();
-
-// ─────────────────────────────────────────
-// BUILD STRIPS
-// ─────────────────────────────────────────
-const stripsEl = document.getElementById('strips');
-let touchTimeout = null;
-let currentTouchStrip = null;
-
-const isTouchDevice = 'ontouchstart' in window;
-
-projects.forEach((p, i) => {
-  const strip = document.createElement('div');
-  strip.className = 'strip';
-  strip.dataset.index = i;
-
-  strip.innerHTML = `
-    <canvas class="strip-canvas" id="canvas-${i}"></canvas>
-    <div class="strip-img" style="background-image: url('${p.image}');"></div>
-    <div class="strip-overlay"></div>
-    <div class="strip-fill" style="background: linear-gradient(180deg, ${p.color} 0%, #080808 100%);"></div>
-    <div class="strip-num">0${i+1}</div>
-    <div class="strip-label">
-      <h3>${p.title}</h3>
-      <p>${p.category}</p>
-    </div>
-  `;
-  stripsEl.appendChild(strip);
-
-  strip.addEventListener('mouseenter', () => document.body.classList.add('hovering-strip'));
-  strip.addEventListener('mouseleave', () => document.body.classList.remove('hovering-strip'));
-
-  strip.addEventListener('click', (e) => {
-    if (isTouchDevice) return;
-    openProject(i);
-  });
-
-  if (isTouchDevice) {
-    strip.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      if (currentTouchStrip && currentTouchStrip !== strip) {
-        currentTouchStrip.classList.remove('touch-hover');
-      }
-      strip.classList.add('touch-hover');
-      currentTouchStrip = strip;
-
-      if (touchTimeout) clearTimeout(touchTimeout);
-      touchTimeout = setTimeout(() => {
-        if (currentTouchStrip === strip) {
-          openProject(i);
-          strip.classList.remove('touch-hover');
-          currentTouchStrip = null;
-        }
-      }, 300);
-    }, { passive: false });
-
-    strip.addEventListener('touchmove', (e) => {
-      if (touchTimeout) {
-        clearTimeout(touchTimeout);
-        touchTimeout = null;
-      }
-      strip.classList.remove('touch-hover');
-      if (currentTouchStrip === strip) currentTouchStrip = null;
-    });
-
-    strip.addEventListener('touchend', (e) => {
-      if (!touchTimeout) {
-        strip.classList.remove('touch-hover');
-        if (currentTouchStrip === strip) currentTouchStrip = null;
-      }
-    });
-
-    strip.addEventListener('touchcancel', (e) => {
-      if (touchTimeout) {
-        clearTimeout(touchTimeout);
-        touchTimeout = null;
-      }
-      strip.classList.remove('touch-hover');
-      if (currentTouchStrip === strip) currentTouchStrip = null;
-    });
-  }
-});
-
-// ─────────────────────────────────────────
-// WEBGL PER-STRIP
-// ─────────────────────────────────────────
-function initWebGL(idx) {
-  const canvas = document.getElementById(`canvas-${idx}`);
-  const gl = canvas.getContext('webgl');
-  if (!gl) return;
-
-  const vsrc = `attribute vec2 a_pos; void main(){gl_Position=vec4(a_pos,0.,1.);}`;
-  const fsrc = `
-    precision mediump float;
-    uniform float u_time;
-    uniform float u_hue;
-    uniform vec2  u_res;
-    vec3 hsv2rgb(vec3 c){
-      vec4 K=vec4(1.,2./3.,1./3.,3.);
-      vec3 p=abs(fract(c.xxx+K.xyz)*6.-K.www);
-      return c.z*mix(K.xxx,clamp(p-K.xxx,0.,1.),c.y);
-    }
-    float noise(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
-    float smoothNoise(vec2 p){
-      vec2 i=floor(p); vec2 f=fract(p); f=f*f*(3.-2.*f);
-      float a=noise(i), b=noise(i+vec2(1,0));
-      float c=noise(i+vec2(0,1)), d=noise(i+vec2(1,1));
-      return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);
-    }
-    void main(){
-      vec2 uv=gl_FragCoord.xy/u_res;
-      float n  = smoothNoise(uv*3.+u_time*.12);
-      float n2 = smoothNoise(uv*6.-u_time*.08+42.);
-      float val = n*.6+n2*.4;
-      vec3 col = hsv2rgb(vec3(u_hue+val*.08, .35+val*.2, .05+val*.08));
-      gl_FragColor=vec4(col,1.);
-    }
-  `;
-
-  function compile(type, src) {
-    const sh = gl.createShader(type);
-    gl.shaderSource(sh, src); gl.compileShader(sh); return sh;
-  }
-  const prog = gl.createProgram();
-  gl.attachShader(prog, compile(gl.VERTEX_SHADER, vsrc));
-  gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fsrc));
-  gl.linkProgram(prog); gl.useProgram(prog);
-
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-  const loc = gl.getAttribLocation(prog, 'a_pos');
-  gl.enableVertexAttribArray(loc);
-  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-  const uTime = gl.getUniformLocation(prog, 'u_time');
-  const uHue  = gl.getUniformLocation(prog, 'u_hue');
-  const uRes  = gl.getUniformLocation(prog, 'u_res');
-  const hue = idx / projects.length;
-
-  function resize() {
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    gl.viewport(0, 0, canvas.width, canvas.height);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  let start = performance.now();
-  function draw() {
-    const t = (performance.now() - start) / 1000;
-    gl.uniform1f(uTime, t);
-    gl.uniform1f(uHue, hue);
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(draw);
-  }
-  draw();
-}
+document.getElementById('portfolio-btn').addEventListener('click',()=>window.open('https://ctrlplayfran.github.io/Portfolio-Hybridbots-Francielly/','_blank'));
+document.getElementById('whatsapp-btn').addEventListener('click',()=>window.open('https://wa.me/5511999999999','_blank'));
 
 // ─────────────────────────────────────────
 // GSAP
 // ─────────────────────────────────────────
-CustomEase.create('premium', 'M0,0 C0.16,1 0.3,1 1,1');
-CustomEase.create('reveal',  'M0,0 C0.25,0.1 0.25,1 1,1');
+CustomEase.create('premium','M0,0 C0.16,1 0.3,1 1,1');
+CustomEase.create('reveal', 'M0,0 C0.25,0.1 0.25,1 1,1');
+
+// ─────────────────────────────────────────
+// BUILD STRIPS TRACK  (3 copies for seamless loop)
+// ─────────────────────────────────────────
+const track = document.getElementById('strips-track');
+const SETS  = 3;
+
+for(let s=0;s<SETS;s++){
+  projects.forEach((p,i)=>{
+    const strip=document.createElement('div');
+    strip.className='strip';
+    strip.dataset.index=i;
+    strip.innerHTML=`
+      <div class="strip-fill" style="background:linear-gradient(160deg,${p.accent2} 0%,${p.color} 50%,#080808 100%)"></div>
+      <div class="strip-img" style="background-image:url('${p.image}')"></div>
+      <div class="strip-overlay"></div>
+      <div class="strip-num">0${i+1}</div>
+      <div class="strip-label"><h3>${p.title}</h3><p>${p.category}</p></div>
+    `;
+    track.appendChild(strip);
+
+    strip.addEventListener('mouseenter',()=>{ document.body.classList.add('hovering-strip'); pauseScroll(); });
+    strip.addEventListener('mouseleave',()=>{ document.body.classList.remove('hovering-strip'); resumeScroll(); });
+    strip.addEventListener('click',()=>openProject(i));
+  });
+}
+
+// ─────────────────────────────────────────
+// INFINITE SCROLL
+// ─────────────────────────────────────────
+// One set = 6 strips × 33.333vw = 200vw
+// Animate translateX from 0 → -(1 set px), then instantly reset → seamless
+const N_PROJ  = projects.length;
+const SET_VW  = N_PROJ * (100/3);
+let scrollPx  = 0;
+let expanded  = false;
+let animating = false;
+
+const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+const SPEED_NORMAL = IS_TOUCH ? 0.3 : 0.45;
+const SPEED_SLOW   = 0.08;
+let speed = SPEED_NORMAL;
+
+function setW(){ return (SET_VW/100)*window.innerWidth; }
+
+function pauseScroll()  { speed = SPEED_SLOW; }
+function resumeScroll() { if(!expanded) speed = SPEED_NORMAL; }
+
+;(function loop(){
+  if(!expanded){
+    scrollPx -= speed;
+    if(scrollPx <= -setW()) scrollPx += setW();
+    track.style.transform=`translateX(${scrollPx}px)`;
+  }
+  requestAnimationFrame(loop);
+})();
+
+// ── Touch swipe on the strips viewport ──
+let touchStartX = 0;
+let touchStartScrollPx = 0;
+let isSwiping = false;
+
+document.getElementById('strips-viewport').addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartScrollPx = scrollPx;
+  isSwiping = true;
+  speed = 0; // freeze during drag
+}, { passive: true });
+
+document.getElementById('strips-viewport').addEventListener('touchmove', e => {
+  if (!isSwiping) return;
+  const dx = e.touches[0].clientX - touchStartX;
+  scrollPx = touchStartScrollPx + dx;
+  // keep in bounds
+  const limit = setW();
+  if(scrollPx <= -limit) scrollPx += limit;
+  if(scrollPx > 0) scrollPx -= limit;
+  track.style.transform = `translateX(${scrollPx}px)`;
+}, { passive: true });
+
+document.getElementById('strips-viewport').addEventListener('touchend', e => {
+  if (!isSwiping) return;
+  isSwiping = false;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  // Small tap (< 8px) = open project; larger = swipe, resume scroll
+  if (Math.abs(dx) < 8) {
+    // handled by click event on strip
+  } else {
+    // momentum: snap to nearest strip with a short animation
+    const stripW = window.innerWidth * (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--strip-w')) / 100);
+    const snapped = Math.round(scrollPx / stripW) * stripW;
+    const start = scrollPx, target = snapped;
+    const dur = 350, t0 = performance.now();
+    const ease = t => 1 - Math.pow(1-t,3);
+    (function snap(){
+      const p = Math.min((performance.now()-t0)/dur, 1);
+      scrollPx = start + (target - start) * ease(p);
+      const limit = setW();
+      if(scrollPx <= -limit) scrollPx += limit;
+      if(scrollPx > 0) scrollPx -= limit;
+      track.style.transform = `translateX(${scrollPx}px)`;
+      if(p < 1) requestAnimationFrame(snap);
+      else resumeScroll();
+    })();
+  }
+  resumeScroll();
+}, { passive: true });
 
 // ─────────────────────────────────────────
 // TITLE SPLIT
 // ─────────────────────────────────────────
-function splitLetters(el) {
-  const text = el.innerText;
-  el.innerHTML = '';
-  for (const line of text.split('\n')) {
-    const div = document.createElement('div');
-    div.style.overflow = 'hidden'; div.style.display = 'block';
-    for (const ch of line) {
-      const span = document.createElement('span');
-      span.className = 'char';
-      span.textContent = ch === ' ' ? '\u00A0' : ch;
-      div.appendChild(span);
+function splitLetters(el){
+  const txt=el.innerText; el.innerHTML='';
+  for(const line of txt.split('\n')){
+    const d=document.createElement('div');
+    d.style.overflow='hidden';d.style.display='block';
+    for(const ch of line){
+      const s=document.createElement('span');
+      s.className='char';s.textContent=ch===' '?'\u00A0':ch;
+      d.appendChild(s);
     }
-    el.appendChild(div);
+    el.appendChild(d);
   }
   return el.querySelectorAll('.char');
 }
-const titleEl = document.getElementById('main-title');
-const chars = splitLetters(titleEl);
+const chars=splitLetters(document.getElementById('main-title'));
 
 // ─────────────────────────────────────────
-// EXPAND PROJECT
+// ARROW BUTTONS
 // ─────────────────────────────────────────
-const expView  = document.getElementById('expanded-view');
-const expImage = document.getElementById('exp-image');
-const expTitle = document.getElementById('exp-title-text');
-const expCat   = document.getElementById('exp-category');
-const expDesc  = document.getElementById('exp-desc');
-const expCount = document.getElementById('exp-count');
-const expPrice = document.getElementById('exp-price');
-const expAddBtn = document.getElementById('exp-add-to-cart');
-let currentProjectIndex = null;
-let isExpanded = false;
+const JUMP_PX = () => window.innerWidth / 3; // one strip width
 
-function openProject(idx) {
-  if (isExpanded) return;
-  isExpanded = true;
-  currentProjectIndex = idx;
-  const p = projects[idx];
-  expImage.style.backgroundImage = `url('${p.image}')`;
-  expTitle.textContent = p.title;
-  expCat.textContent   = p.category;
-  expDesc.textContent  = p.desc;
-  expCount.textContent = `0${idx+1} / 0${projects.length}`;
-  expPrice.textContent = `R$ ${p.price.toFixed(2)}`;
-
-  expView.classList.add('active');
-  gsap.to(expView, { opacity: 1, duration: .6, ease: 'premium' });
-
-  gsap.to('#exp-title span', { y: '0%', duration: .9, ease: 'reveal', delay: .2 });
-  gsap.to([expCount, expCat, expDesc, expPrice, expAddBtn], {
-    opacity: 1, y: 0, duration: .6, stagger: .1, delay: .45, ease: 'premium',
-    from: { opacity: 0, y: 20 }
-  });
-
-  gsap.to('.strip', { flex: '0.6', duration: .7, ease: 'premium' });
-  gsap.to('#center-title', { opacity: 0, duration: .3 });
+function scrollBy(dir) {
+  const jump = JUMP_PX() * dir;
+  const target = scrollPx - jump;
+  const prevSpeed = speed;
+  speed = 0;
+  const start = scrollPx;
+  const duration = 600;
+  const t0 = performance.now();
+  function ease(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function step(){
+    const elapsed = performance.now() - t0;
+    const progress = Math.min(elapsed / duration, 1);
+    scrollPx = start + (target - start) * ease(progress);
+    const limit = setW();
+    if(scrollPx <= -limit) scrollPx += limit;
+    if(scrollPx > 0) scrollPx -= limit;
+    track.style.transform = `translateX(${scrollPx}px)`;
+    if(progress < 1) requestAnimationFrame(step);
+    else speed = prevSpeed;
+  }
+  requestAnimationFrame(step);
 }
 
-document.getElementById('exp-close').addEventListener('click', closeProject);
-function closeProject() {
-  if (!isExpanded) return;
-  gsap.to(expView, { opacity: 0, duration: .5, ease: 'premium', onComplete: () => {
+document.getElementById('arrow-left').addEventListener('click',  () => scrollBy(-1));
+document.getElementById('arrow-right').addEventListener('click', () => scrollBy(1));
+// ─────────────────────────────────────────
+const expView  =document.getElementById('expanded-view');
+const expImage =document.getElementById('exp-image');
+const expCount =document.getElementById('exp-count');
+const expCat   =document.getElementById('exp-category');
+const expDesc  =document.getElementById('exp-desc');
+const expPrice =document.getElementById('exp-price');
+const expAddBtn=document.getElementById('exp-add-to-cart');
+const expEls   =[expCount,expCat,expDesc,expPrice,expAddBtn];
+let curIdx=null;
+
+function openProject(idx){
+  if(expanded||animating)return;
+  animating=true; expanded=true; curIdx=idx;
+  pauseScroll();
+  document.body.classList.add('expanded');
+  const p=projects[idx];
+  expImage.style.backgroundImage=`url('${p.image}')`;
+  document.getElementById('exp-title-text').textContent=p.title;
+  expCat.textContent=p.category; expDesc.textContent=p.desc;
+  expCount.textContent=`0${idx+1} / 0${projects.length}`;
+  expPrice.textContent=`R$ ${p.price.toFixed(2)}`;
+  gsap.set('#exp-title span',{y:'100%'});
+  gsap.set(expEls,{opacity:0,y:20});
+  const tl=gsap.timeline({onComplete:()=>{animating=false;}});
+  tl.to('#center-title',{opacity:0,duration:.25,ease:'power2.out'},0)
+    .to('#strips-viewport',{opacity:0,duration:.4,ease:'power2.out'},0)
+    .to(['#vignette-left','#vignette-right'],{opacity:0,duration:.3},0)
+    .to(expView,{opacity:1,duration:.45,ease:'premium',onStart:()=>expView.classList.add('active')},0.2)
+    .to('#exp-title span',{y:'0%',duration:.9,ease:'reveal'},0.35)
+    .to(expEls,{opacity:1,y:0,duration:.6,stagger:.1,ease:'premium'},0.5);
+}
+
+document.getElementById('exp-close').addEventListener('click',closeProject);
+function closeProject(){
+  if(!expanded||animating)return;
+  animating=true;
+  const tl=gsap.timeline({onComplete:()=>{
+    expanded=false;animating=false;
     expView.classList.remove('active');
-    isExpanded = false;
-    gsap.to('#exp-title span', { y: '100%', duration: 0 });
-    gsap.to([expCount, expCat, expDesc, expPrice, expAddBtn], { opacity: 0, duration: 0 });
+    gsap.set('#exp-title span',{y:'100%'});
+    gsap.set(expEls,{opacity:0,y:20});
+    gsap.set(expView,{opacity:0});
+    resumeScroll();
+    rx=mx;ry=my;
+    document.body.classList.remove('hovering-strip');
+    document.body.classList.remove('expanded');
   }});
-  gsap.to('.strip', { flex: '1', duration: .7, ease: 'premium', delay: .1 });
-  gsap.to('#center-title', { opacity: 1, duration: .5, delay: .2 });
+  tl.to(expEls,{opacity:0,y:-10,duration:.3,stagger:.04},0)
+    .to('#exp-title span',{y:'-100%',duration:.4,ease:'premium'},0.05)
+    .to(expView,{opacity:0,duration:.4,ease:'premium'},0.15)
+    .to('#strips-viewport',{opacity:1,duration:.5,ease:'premium'},0.3)
+    .to(['#vignette-left','#vignette-right'],{opacity:1,duration:.4},0.3)
+    .to('#center-title',{opacity:1,duration:.5,ease:'premium'},0.4);
 }
 
-expAddBtn.addEventListener('click', () => {
-  if (currentProjectIndex !== null) {
-    addToCart(projects[currentProjectIndex]);
-    gsap.to(expAddBtn, { scale: 1.1, duration: .2, yoyo: true, repeat: 1 });
+expAddBtn.addEventListener('click',e=>{
+  e.stopPropagation();
+  if(curIdx!==null){
+    addToCart(projects[curIdx]);
+    gsap.to(expAddBtn,{scale:1.05,duration:.15,yoyo:true,repeat:1,ease:'power2.out'});
   }
 });
+
+// ─────────────────────────────────────────
+// PARALLAX TITLE (desktop only)
+// ─────────────────────────────────────────
+if (!IS_TOUCH) {
+  document.addEventListener('mousemove',e=>{
+    gsap.to('#center-title',{x:(e.clientX/innerWidth-.5)*18,y:(e.clientY/innerHeight-.5)*12,duration:1.2,ease:'power2.out',overwrite:'auto'});
+  });
+}
 
 // ─────────────────────────────────────────
 // LOADER → INTRO
 // ─────────────────────────────────────────
-window.addEventListener('load', () => {
-  projects.forEach((_, i) => initWebGL(i));
-
-  const loaderNum = document.getElementById('loader-num');
-  const loaderBar = document.getElementById('loader-bar');
-  let count = 0;
-  const iv = setInterval(() => {
-    count += Math.floor(Math.random() * 8) + 4;
-    if (count >= 100) { count = 100; clearInterval(iv); startIntro(); }
-    loaderNum.textContent = count;
-    loaderBar.style.width = count + '%';
-  }, 60);
+window.addEventListener('load',()=>{
+  gsap.set('#strips-viewport',{opacity:0});
+  gsap.set(['#vignette-left','#vignette-right'],{opacity:0});
+  const num=document.getElementById('loader-num');
+  const bar=document.getElementById('loader-bar');
+  let n=0;
+  const iv=setInterval(()=>{
+    n+=Math.floor(Math.random()*8)+4;
+    if(n>=100){n=100;clearInterval(iv);startIntro();}
+    num.textContent=n; bar.style.width=n+'%';
+  },60);
 });
 
-function startIntro() {
-  const tl = gsap.timeline();
-  tl.to('#loader', { opacity: 0, duration: .6, ease: 'premium', delay: .2 })
-    .set('#loader', { display: 'none' })
-    .fromTo('.strip', { scaleY: 0, transformOrigin: 'bottom' }, {
-      scaleY: 1, duration: 1.2, stagger: .08, ease: 'premium'
-    }, 0)
-    .from(chars, { y: '110%', opacity: 0, duration: .9, stagger: .025, ease: 'reveal' }, .4)
-    .from('#center-title .sub', { opacity: 0, y: 10, duration: .6, ease: 'premium' }, 1)
-    .from('header', { opacity: 0, y: -20, duration: .6, ease: 'premium' }, .6);
+function startIntro(){
+  const tl=gsap.timeline();
+  tl.to('#loader',{opacity:0,duration:.6,ease:'premium',delay:.2})
+    .set('#loader',{display:'none'})
+    .to('#strips-viewport',{opacity:1,duration:1,ease:'power2.out'},0.2)
+    .to(['#vignette-left','#vignette-right'],{opacity:1,duration:.8},0.4)
+    .from(chars,{y:'110%',opacity:0,duration:.9,stagger:.025,ease:'reveal'},0.3)
+    .from('#center-title .sub',{opacity:0,y:10,duration:.6,ease:'premium'},0.9)
+    .from('header',{opacity:0,y:-20,duration:.6,ease:'premium'},0.4);
 }
 
-// ─────────────────────────────────────────
-// MOUSE PARALLAX
-// ─────────────────────────────────────────
-document.addEventListener('mousemove', e => {
-  const dx = (e.clientX / window.innerWidth  - .5) * 18;
-  const dy = (e.clientY / window.innerHeight - .5) * 12;
-  gsap.to('#center-title', { x: dx, y: dy, duration: 1.2, ease: 'power2.out', overwrite: 'auto' });
-});
-
-// Inicializa carrinho
 updateCartUI();
 </script>
 </body>
