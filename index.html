@@ -70,7 +70,17 @@
     display: flex; justify-content: space-between; align-items: center;
     padding: 24px 20px; pointer-events: none; mix-blend-mode: exclusion;
   }
-  .logo { font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.2em; color:var(--fg); }
+
+  /* ── Logo image ── */
+  .logo-img {
+    height: 40px;
+    width: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+    transition: opacity .2s;
+  }
+  .logo-img:hover { opacity: .75; }
+
   .nav-items {
     display:flex; gap:12px;
     font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
@@ -109,6 +119,7 @@
     header { padding: 18px 16px; }
     .nav-items { gap: 8px; }
     .nav-items li { padding: 6px 12px; font-size: 10px; }
+    .logo-img { height: 32px; }
   }
 
   /* ── Center Title ── */
@@ -349,7 +360,7 @@
 </div>
 
 <header>
-  <div class="logo">Hybridbots</div>
+  <img src="logo.svg" alt="Hybridbots" class="logo-img" />
   <ul class="nav-items">
     <li id="portfolio-btn">Portfólio</li>
     <li id="whatsapp-btn">Whatsapp</li>
@@ -494,7 +505,6 @@ for(let s=0;s<SETS;s++){
 // INFINITE SCROLL
 // ─────────────────────────────────────────
 const N_PROJ  = projects.length;
-const SET_VW  = N_PROJ * (100/3);
 let scrollPx  = 0;
 let expanded  = false;
 let animating = false;
@@ -505,7 +515,13 @@ const SPEED_NORMAL = IS_TOUCH ? 0.3 : 0.45;
 const SPEED_SLOW   = 0.08;
 let speed = SPEED_NORMAL;
 
-function setW(){ return (SET_VW/100)*window.innerWidth; }
+// Read actual rendered strip width from DOM — respects CSS breakpoints
+function stripW() {
+  const s = track.querySelector('.strip');
+  return s ? s.getBoundingClientRect().width : window.innerWidth / 3;
+}
+// One full set = N_PROJ strips
+function setW(){ return stripW() * N_PROJ; }
 
 function pauseScroll()  { speed = SPEED_SLOW; }
 function resumeScroll() { if(!expanded) speed = SPEED_NORMAL; }
@@ -513,7 +529,9 @@ function resumeScroll() { if(!expanded) speed = SPEED_NORMAL; }
 ;(function loop(){
   if(!expanded){
     scrollPx -= speed;
-    if(scrollPx <= -setW()) scrollPx += setW();
+    const w = setW();
+    if(scrollPx <= -w) scrollPx += w;
+    if(scrollPx > 0)   scrollPx -= w;
     track.style.transform=`translateX(${scrollPx}px)`;
   }
   requestAnimationFrame(loop);
@@ -526,6 +544,9 @@ let isSwiping = false;
 
 document.getElementById('strips-viewport').addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
+  // Normalize before storing, so swipe math never crosses the wrap boundary
+  const w = setW();
+  scrollPx = -( (((-scrollPx) % w) + w) % w );
   touchStartScrollPx = scrollPx;
   isSwiping = true;
   speed = 0;
@@ -534,10 +555,11 @@ document.getElementById('strips-viewport').addEventListener('touchstart', e => {
 document.getElementById('strips-viewport').addEventListener('touchmove', e => {
   if (!isSwiping) return;
   const dx = e.touches[0].clientX - touchStartX;
-  scrollPx = touchStartScrollPx + dx;
-  const limit = setW();
-  if(scrollPx <= -limit) scrollPx += limit;
-  if(scrollPx > 0) scrollPx -= limit;
+  const w = setW();
+  // Normalize continuously so the wrap never creates a visual jump
+  let raw = touchStartScrollPx + dx;
+  raw = -( (((-raw) % w) + w) % w );
+  scrollPx = raw;
   track.style.transform = `translateX(${scrollPx}px)`;
 }, { passive: true });
 
@@ -548,17 +570,16 @@ document.getElementById('strips-viewport').addEventListener('touchend', e => {
   if (Math.abs(dx) < 8) {
     // handled by click event on strip
   } else {
-    const stripW = window.innerWidth * (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--strip-w')) / 100);
-    const snapped = Math.round(scrollPx / stripW) * stripW;
+    const sw = stripW();
+    const snapped = Math.round(-scrollPx / sw) * -sw;
     const start = scrollPx, target = snapped;
+    // normalize target to avoid wrap jump during snap animation
+    const ww = setW(); const tNorm = -((((-target)%ww)+ww)%ww);
     const dur = 350, t0 = performance.now();
     const ease = t => 1 - Math.pow(1-t,3);
     (function snap(){
       const p = Math.min((performance.now()-t0)/dur, 1);
-      scrollPx = start + (target - start) * ease(p);
-      const limit = setW();
-      if(scrollPx <= -limit) scrollPx += limit;
-      if(scrollPx > 0) scrollPx -= limit;
+      scrollPx = start + (tNorm - start) * ease(p);
       track.style.transform = `translateX(${scrollPx}px)`;
       if(p < 1) requestAnimationFrame(snap);
       else resumeScroll();
