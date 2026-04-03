@@ -81,13 +81,12 @@
   }
   .logo-img:hover { opacity: .75; }
 
+  /* ── Desktop nav ── */
   .nav-items {
-    display:flex; gap:12px;
-    font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase;
-    list-style:none; pointer-events:all;
+    display: flex; gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    list-style: none; pointer-events: all;
   }
-
-  /* ── NAV BUTTONS — pill border style (like "Sobre mim") ── */
   .nav-items li {
     cursor: none;
     opacity: 1;
@@ -108,17 +107,159 @@
     border-color: var(--accent);
     color: var(--accent);
   }
-  /* Remove the old underline pseudo-element */
   .nav-items li::after { display: none; }
+  #cart-count { margin-left: 4px; color: var(--accent); }
 
-  #cart-count { margin-left:4px; color:var(--accent); }
+  /* ── Mobile nav: hambúrguer + carrinho ── */
+  #mobile-nav {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    pointer-events: all;
+  }
 
-  /* Hide Portfólio on very small screens */
+  /* Botão carrinho mobile */
+  #mobile-cart-btn {
+    position: relative;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(240,236,228,.35);
+    border-radius: 999px;
+    background: rgba(8,8,8,.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .25s, border-color .25s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #mobile-cart-btn:active {
+    background: rgba(200,184,154,.18);
+    border-color: var(--accent);
+  }
+  #mobile-cart-btn svg {
+    width: 18px; height: 18px;
+    stroke: var(--fg); stroke-width: 1.5; fill: none;
+  }
+  #mobile-cart-badge {
+    position: absolute; top: -4px; right: -4px;
+    min-width: 18px; height: 18px;
+    background: var(--accent);
+    border-radius: 999px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px; font-weight: 700;
+    color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+  }
+  #mobile-cart-badge.visible { opacity: 1; }
+
+  /* Botão hambúrguer */
+  #hamburger-btn {
+    width: 44px; height: 44px;
+    border: 1px solid rgba(240,236,228,.35);
+    border-radius: 999px;
+    background: rgba(8,8,8,.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background .25s, border-color .25s;
+    -webkit-tap-highlight-color: transparent;
+    flex-direction: column;
+    gap: 5px;
+  }
+  #hamburger-btn:active,
+  #hamburger-btn.open {
+    background: rgba(200,184,154,.18);
+    border-color: var(--accent);
+  }
+  .ham-line {
+    width: 18px; height: 1.5px;
+    background: var(--fg);
+    border-radius: 2px;
+    transition: transform .3s, opacity .3s, background .25s;
+    transform-origin: center;
+  }
+  #hamburger-btn.open .ham-line:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+    background: var(--accent);
+  }
+  #hamburger-btn.open .ham-line:nth-child(2) {
+    opacity: 0;
+  }
+  #hamburger-btn.open .ham-line:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+    background: var(--accent);
+  }
+
+  /* ── Dropdown menu mobile ── */
+  #mobile-dropdown {
+    position: fixed;
+    top: 76px; right: 16px;
+    background: rgba(8,8,8,.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(240,236,228,.15);
+    border-radius: 16px;
+    padding: 8px;
+    z-index: 99;
+    min-width: 180px;
+    transform-origin: top right;
+    transform: scale(.85) translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+  }
+  #mobile-dropdown.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+  .dropdown-item {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--fg);
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .dropdown-item:active,
+  .dropdown-item:hover {
+    background: rgba(200,184,154,.15);
+    color: var(--accent);
+  }
+  .dropdown-item svg {
+    width: 16px; height: 16px;
+    stroke: currentColor; stroke-width: 1.5; fill: none;
+    flex-shrink: 0;
+  }
+  .dropdown-divider {
+    height: 1px;
+    background: rgba(240,236,228,.08);
+    margin: 4px 8px;
+  }
+
+  /* ── Responsivo ── */
   @media (max-width: 480px) {
     #portfolio-btn { display: none; }
     header { padding: 18px 16px; }
     .nav-items { gap: 8px; }
     .nav-items li { padding: 6px 12px; font-size: 10px; }
+    .logo-img { height: 32px; }
+  }
+
+  /* Mostrar hambúrguer, esconder nav desktop no mobile */
+  @media (max-width: 767px) {
+    .nav-items { display: none; }
+    #mobile-nav { display: flex; }
+    header { padding: 18px 16px; }
     .logo-img { height: 32px; }
   }
 
@@ -171,7 +312,7 @@
   /* Mobile: 1 strip visible at a time */
   @media (max-width: 767px) {
     :root { --strip-w: 82vw; }
-    .strip:hover { width: var(--strip-w); } /* no expand on touch */
+    .strip:hover { width: var(--strip-w); }
   }
   @media (min-width: 768px) and (max-width: 1023px) {
     :root { --strip-w: 50vw; }
@@ -186,7 +327,6 @@
   .strip-overlay { position:absolute; inset:0; background:var(--bg); opacity:.25; transition:opacity .5s; z-index:3; pointer-events:none; }
   .strip-fill { position:absolute; inset:0; z-index:0; }
 
-  /* ── Strip number moved to BOTTOM, above the label ── */
   .strip-num {
     position:absolute; bottom:80px; left:20px;
     font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.25em; text-transform:uppercase;
@@ -236,7 +376,6 @@
   .nav-arrow:hover svg { stroke: var(--accent); }
   body.expanded .nav-arrow { opacity: 0; pointer-events: none; }
 
-  /* Bigger tap target on mobile */
   @media (max-width: 767px) {
     .nav-arrow { width: 52px; height: 52px; }
     .nav-arrow svg { width: 18px; height: 18px; }
@@ -256,7 +395,6 @@
     border-left:1px solid rgba(240,236,228,.08);
   }
 
-  /* Mobile: stack image on top, info below */
   @media (max-width: 767px) {
     #expanded-view { flex-direction: column; overflow-y: auto; }
     #exp-image { flex: 0 0 45vh; width: 100%; min-height: 200px; }
@@ -288,7 +426,6 @@
     border-radius: 4px;
   }
   #exp-add-to-cart:hover { background:var(--accent); color:var(--bg); }
-  /* Full-width CTA on mobile */
   @media (max-width: 767px) {
     #exp-add-to-cart { width: 100%; text-align: center; padding: 16px; margin-top: 20px; }
   }
@@ -361,12 +498,47 @@
 
 <header>
   <img src="logo.svg" alt="Hybridbots" class="logo-img" />
+
+  <!-- Desktop nav -->
   <ul class="nav-items">
     <li id="portfolio-btn">Portfólio</li>
     <li id="whatsapp-btn">Whatsapp</li>
     <li id="cart-menu">Carrinho (<span id="cart-count">0</span>)</li>
   </ul>
+
+  <!-- Mobile nav: carrinho + hambúrguer -->
+  <div id="mobile-nav">
+    <!-- Ícone carrinho -->
+    <div id="mobile-cart-btn" aria-label="Carrinho">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span id="mobile-cart-badge">0</span>
+    </div>
+
+    <!-- Hambúrguer -->
+    <div id="hamburger-btn" aria-label="Menu">
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+    </div>
+  </div>
 </header>
+
+<!-- Dropdown mobile -->
+<div id="mobile-dropdown">
+  <div class="dropdown-item" id="dd-portfolio">
+    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Portfólio
+  </div>
+  <div class="dropdown-divider"></div>
+  <div class="dropdown-item" id="dd-whatsapp">
+    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    Whatsapp
+  </div>
+</div>
 
 <div id="center-title">
   <h1 id="main-title">ADQUIRA<br>NOSSOS PROJETOS</h1>
@@ -450,7 +622,16 @@ function addToCart(p){
 }
 function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); updateCartUI(); }
 function updateCartUI(){
-  document.getElementById('cart-count').textContent=cart.reduce((a,i)=>a+i.quantity,0);
+  const total = cart.reduce((a,i)=>a+i.quantity,0);
+
+  // Desktop count
+  document.getElementById('cart-count').textContent = total;
+
+  // Mobile badge
+  const badge = document.getElementById('mobile-cart-badge');
+  badge.textContent = total;
+  badge.classList.toggle('visible', total > 0);
+
   const el=document.getElementById('cart-items');
   if(!cart.length){ el.innerHTML='<div id="cart-empty">Seu carrinho está vazio</div>'; }
   else{
@@ -459,13 +640,63 @@ function updateCartUI(){
   }
   document.getElementById('cart-total-value').textContent=`R$ ${cart.reduce((a,i)=>a+i.price*i.quantity,0).toFixed(2)}`;
 }
-const cartSidebar=document.getElementById('cart-sidebar');
-const cartMenu=document.getElementById('cart-menu');
+
+const cartSidebar = document.getElementById('cart-sidebar');
+const cartMenu    = document.getElementById('cart-menu');
+
 document.getElementById('cart-close').addEventListener('click',e=>{e.stopPropagation();cartSidebar.classList.remove('open');});
 cartMenu.addEventListener('click',e=>{e.stopPropagation();cartSidebar.classList.add('open');});
-document.addEventListener('click',e=>{if(!cartSidebar.contains(e.target)&&!cartMenu.contains(e.target))cartSidebar.classList.remove('open');});
-function openCartSidebar(){cartSidebar.classList.add('open');}
+document.addEventListener('click',e=>{if(!cartSidebar.contains(e.target)&&!cartMenu.contains(e.target)&&!document.getElementById('mobile-cart-btn').contains(e.target))cartSidebar.classList.remove('open');});
+function openCartSidebar(){ cartSidebar.classList.add('open'); }
 
+// ─────────────────────────────────────────
+// MOBILE CART BUTTON
+// ─────────────────────────────────────────
+document.getElementById('mobile-cart-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  closeDropdown();
+  cartSidebar.classList.toggle('open');
+});
+
+// ─────────────────────────────────────────
+// HAMBURGER MENU
+// ─────────────────────────────────────────
+const hamburgerBtn   = document.getElementById('hamburger-btn');
+const mobileDropdown = document.getElementById('mobile-dropdown');
+let dropdownOpen = false;
+
+function openDropdown() {
+  dropdownOpen = true;
+  hamburgerBtn.classList.add('open');
+  mobileDropdown.classList.add('open');
+}
+function closeDropdown() {
+  dropdownOpen = false;
+  hamburgerBtn.classList.remove('open');
+  mobileDropdown.classList.remove('open');
+}
+function toggleDropdown() {
+  dropdownOpen ? closeDropdown() : openDropdown();
+}
+
+hamburgerBtn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown(); });
+
+document.addEventListener('click', e => {
+  if (!mobileDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+    closeDropdown();
+  }
+});
+
+document.getElementById('dd-portfolio').addEventListener('click', () => {
+  closeDropdown();
+  window.open('https://ctrlplayfran.github.io/Portfolio-Hybridbots-Francielly/', '_blank');
+});
+document.getElementById('dd-whatsapp').addEventListener('click', () => {
+  closeDropdown();
+  window.open('https://wa.me/5511999999999', '_blank');
+});
+
+// Desktop links (mantidos)
 document.getElementById('portfolio-btn').addEventListener('click',()=>window.open('https://ctrlplayfran.github.io/Portfolio-Hybridbots-Francielly/','_blank'));
 document.getElementById('whatsapp-btn').addEventListener('click',()=>window.open('https://wa.me/5511999999999','_blank'));
 
@@ -515,12 +746,10 @@ const SPEED_NORMAL = IS_TOUCH ? 0.3 : 0.45;
 const SPEED_SLOW   = 0.08;
 let speed = SPEED_NORMAL;
 
-// Read actual rendered strip width from DOM — respects CSS breakpoints
 function stripW() {
   const s = track.querySelector('.strip');
   return s ? s.getBoundingClientRect().width : window.innerWidth / 3;
 }
-// One full set = N_PROJ strips
 function setW(){ return stripW() * N_PROJ; }
 
 function pauseScroll()  { speed = SPEED_SLOW; }
@@ -544,7 +773,6 @@ let isSwiping = false;
 
 document.getElementById('strips-viewport').addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
-  // Normalize before storing, so swipe math never crosses the wrap boundary
   const w = setW();
   scrollPx = -( (((-scrollPx) % w) + w) % w );
   touchStartScrollPx = scrollPx;
@@ -556,7 +784,6 @@ document.getElementById('strips-viewport').addEventListener('touchmove', e => {
   if (!isSwiping) return;
   const dx = e.touches[0].clientX - touchStartX;
   const w = setW();
-  // Normalize continuously so the wrap never creates a visual jump
   let raw = touchStartScrollPx + dx;
   raw = -( (((-raw) % w) + w) % w );
   scrollPx = raw;
@@ -573,7 +800,6 @@ document.getElementById('strips-viewport').addEventListener('touchend', e => {
     const sw = stripW();
     const snapped = Math.round(-scrollPx / sw) * -sw;
     const start = scrollPx, target = snapped;
-    // normalize target to avoid wrap jump during snap animation
     const ww = setW(); const tNorm = -((((-target)%ww)+ww)%ww);
     const dur = 350, t0 = performance.now();
     const ease = t => 1 - Math.pow(1-t,3);
@@ -653,6 +879,7 @@ function openProject(idx){
   if(expanded||animating)return;
   animating=true; expanded=true; curIdx=idx;
   pauseScroll();
+  closeDropdown();
   document.body.classList.add('expanded');
   const p=projects[idx];
   expImage.style.backgroundImage=`url('${p.image}')`;
@@ -732,7 +959,7 @@ function startIntro(){
   tl.to('#loader',{opacity:0,duration:.6,ease:'premium',delay:.2})
     .set('#loader',{display:'none'})
     .to('#strips-viewport',{opacity:1,duration:1,ease:'power2.out'},0.2)
-    .to(['#vignette-left','#vignette-right'],{opacity:1,duration:.8},0.4)
+    .to(['#vignette-left','#vignette-right'],{opacity:.8},0.4)
     .from(chars,{y:'110%',opacity:0,duration:.9,stagger:.025,ease:'reveal'},0.3)
     .from('#center-title .sub',{opacity:0,y:10,duration:.6,ease:'premium'},0.9)
     .from('header',{opacity:0,y:-20,duration:.6,ease:'premium'},0.4);
