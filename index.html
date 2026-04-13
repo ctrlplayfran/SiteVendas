@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Hybridbots — Studio Shop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;400;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
@@ -16,6 +16,7 @@
     --fg: #f0ece4;
     --accent: #c8b89a;
     --strip-w: 33.333vw;
+    --navbar-h: 76px;
   }
 
   html, body {
@@ -27,7 +28,7 @@
     cursor: none;
   }
 
-  /* ── Custom Cursor — hidden on touch ── */
+  /* ── Custom Cursor (touch fallback) ── */
   #cursor {
     position: fixed; top: 0; left: 0;
     pointer-events: none; z-index: 9999;
@@ -60,239 +61,176 @@
   @media (pointer: coarse) {
     body { cursor: auto; }
     #cursor { display: none; }
-    .strip, .nav-items li, .nav-arrow, #exp-close, #exp-add-to-cart,
-    #cart-menu, #cart-close, #cart-checkout, .cart-item-remove { cursor: pointer; }
+    .strip, .nav-arrow, #exp-close, #exp-add-to-cart,
+    #cart-menu, #cart-close, #cart-checkout, .cart-item-remove,
+    .top-nav-btn { cursor: pointer; }
   }
 
-  /* ── Header ── */
-  header {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 24px 20px; pointer-events: none; mix-blend-mode: exclusion;
-  }
-
-  /* ── Logo image ── */
-  .logo-img {
-    height: 40px;
-    width: auto;
-    display: block;
-    filter: brightness(0) invert(1);
-    transition: opacity .2s;
-  }
-  .logo-img:hover { opacity: .75; }
-
-  /* ── Desktop nav ── */
-  .nav-items {
-    display: flex; gap: 12px;
-    font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-    list-style: none; pointer-events: all;
-  }
-  .nav-items li {
-    cursor: none;
-    opacity: 1;
-    transition: opacity .2s, background .25s, color .25s;
-    position: relative;
-    padding: 7px 16px;
-    border: 1px solid rgba(240,236,228,.35);
-    border-radius: 999px;
-    background: rgba(8,8,8,.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    color: var(--fg);
-    letter-spacing: .18em;
-  }
-  .nav-items li:hover {
-    opacity: 1;
-    background: rgba(200,184,154,.18);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .nav-items li::after { display: none; }
-  #cart-count { margin-left: 4px; color: var(--accent); }
-
-  /* ── Mobile nav: hambúrguer + carrinho ── */
-  #mobile-nav {
-    display: none;
+  /* ════════════════════════════════════════
+     TOP HORIZONTAL NAVIGATION (replaces left sidebar)
+  ════════════════════════════════════════ */
+  #top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--navbar-h);
+    z-index: 150;
+    background: rgba(8, 8, 8, 0.78);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(240, 236, 228, 0.1);
+    display: flex;
     align-items: center;
-    gap: 10px;
-    pointer-events: all;
+    justify-content: space-between;
+    padding: 0 28px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
   }
 
-  /* Botão carrinho mobile */
-  #mobile-cart-btn {
+  /* Logo + brand */
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .nav-brand img {
+    height: 44px;
+    width: auto;
+    border-radius: 10px;
+    border: 1px solid rgba(200,184,154,.35);
+    transition: all .3s ease;
+    display: block;
+  }
+  .nav-brand img:hover {
+    border-color: var(--accent);
+    transform: scale(1.03);
+    box-shadow: 0 0 12px rgba(200,184,154,.2);
+  }
+  .brand-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-left: 1px solid rgba(200,184,154,.3);
+    padding-left: 14px;
+    font-weight: 300;
+  }
+  @media (max-width: 580px) {
+    .brand-text { display: none; }
+    #top-navbar { padding: 0 18px; }
+  }
+
+  /* Right icons group */
+  .nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .top-nav-btn {
     position: relative;
-    width: 44px; height: 44px;
-    border: 1px solid rgba(240,236,228,.35);
-    border-radius: 999px;
-    background: rgba(8,8,8,.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: background .25s, border-color .25s;
+    width: 48px;
+    height: 48px;
+    border-radius: 30px;
+    border: 1px solid rgba(240,236,228,.18);
+    background: rgba(240,236,228,.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: none;
+    transition: all 0.25s ease;
     -webkit-tap-highlight-color: transparent;
   }
-  #mobile-cart-btn:active {
-    background: rgba(200,184,154,.18);
+  .top-nav-btn:hover {
+    background: rgba(200,184,154,.12);
     border-color: var(--accent);
+    transform: translateY(-2px);
   }
-  #mobile-cart-btn svg {
-    width: 18px; height: 18px;
-    stroke: var(--fg); stroke-width: 1.5; fill: none;
+  .top-nav-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--fg);
+    stroke-width: 1.5;
+    fill: none;
+    transition: stroke 0.25s;
   }
-  #mobile-cart-badge {
-    position: absolute; top: -4px; right: -4px;
-    min-width: 18px; height: 18px;
+  .top-nav-btn:hover svg {
+    stroke: var(--accent);
+  }
+  /* Cart badge */
+  .cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
     background: var(--accent);
     border-radius: 999px;
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px; font-weight: 700;
+    font-size: 9px;
+    font-weight: 700;
     color: var(--bg);
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0 4px;
     line-height: 1;
     opacity: 0;
-    transition: opacity .2s;
+    transition: opacity 0.2s;
     pointer-events: none;
   }
-  #mobile-cart-badge.visible { opacity: 1; }
-
-  /* Botão hambúrguer */
-  #hamburger-btn {
-    width: 44px; height: 44px;
-    border: 1px solid rgba(240,236,228,.35);
-    border-radius: 999px;
-    background: rgba(8,8,8,.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: background .25s, border-color .25s;
-    -webkit-tap-highlight-color: transparent;
-    flex-direction: column;
-    gap: 5px;
-  }
-  #hamburger-btn:active,
-  #hamburger-btn.open {
-    background: rgba(200,184,154,.18);
-    border-color: var(--accent);
-  }
-  .ham-line {
-    width: 18px; height: 1.5px;
-    background: var(--fg);
-    border-radius: 2px;
-    transition: transform .3s, opacity .3s, background .25s;
-    transform-origin: center;
-  }
-  #hamburger-btn.open .ham-line:nth-child(1) {
-    transform: translateY(6.5px) rotate(45deg);
-    background: var(--accent);
-  }
-  #hamburger-btn.open .ham-line:nth-child(2) {
-    opacity: 0;
-  }
-  #hamburger-btn.open .ham-line:nth-child(3) {
-    transform: translateY(-6.5px) rotate(-45deg);
-    background: var(--accent);
-  }
-
-  /* ── Dropdown menu mobile ── */
-  #mobile-dropdown {
-    position: fixed;
-    top: 76px; right: 16px;
-    background: rgba(8,8,8,.92);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(240,236,228,.15);
-    border-radius: 16px;
-    padding: 8px;
-    z-index: 99;
-    min-width: 180px;
-    transform-origin: top right;
-    transform: scale(.85) translateY(-8px);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s;
-  }
-  #mobile-dropdown.open {
-    transform: scale(1) translateY(0);
+  .cart-badge.visible {
     opacity: 1;
-    pointer-events: all;
   }
-  .dropdown-item {
-    display: flex; align-items: center; gap: 12px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--fg);
-    padding: 14px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background .2s, color .2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .dropdown-item:active,
-  .dropdown-item:hover {
-    background: rgba(200,184,154,.15);
+
+  /* tooltip effect */
+  .top-nav-btn::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(8,8,8,.92);
+    border: 1px solid rgba(200,184,154,.3);
     color: var(--accent);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+    z-index: 160;
   }
-  .dropdown-item svg {
-    width: 16px; height: 16px;
-    stroke: currentColor; stroke-width: 1.5; fill: none;
-    flex-shrink: 0;
-  }
-  .dropdown-divider {
-    height: 1px;
-    background: rgba(240,236,228,.08);
-    margin: 4px 8px;
-  }
-
-  /* ── Responsivo ── */
-  @media (max-width: 480px) {
-    #portfolio-btn { display: none; }
-    header { padding: 18px 16px; }
-    .nav-items { gap: 8px; }
-    .nav-items li { padding: 6px 12px; font-size: 10px; }
-    .logo-img { height: 32px; }
+  .top-nav-btn:hover::after {
+    opacity: 1;
   }
 
-  /* Mostrar hambúrguer, esconder nav desktop no mobile */
-  @media (max-width: 767px) {
-    .nav-items { display: none; }
-    #mobile-nav { display: flex; }
-    header { padding: 18px 16px; }
-    .logo-img { height: 32px; }
-  }
-
-  /* ── Center Title ── */
-  #center-title {
-    position: fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-    z-index:50; pointer-events:none; text-align:center; mix-blend-mode:exclusion;
-    width: 90vw;
-  }
-  #center-title h1 {
-    font-family:'Bebas Neue',sans-serif;
-    font-size:clamp(15px,7.5vw,60px); letter-spacing:-.01em; line-height:.9; color:var(--fg);
-  }
-  #center-title .sub {
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:11px; letter-spacing:.4em; text-transform:uppercase; color:var(--accent); margin-top:14px;
-  }
-  .char { display:inline-block; }
-
-  /* ── Strips Viewport ── */
+  /* ── Adjust main viewport: push down due to top navbar ── */
   #strips-viewport {
-    position: fixed; inset:0; overflow:hidden; z-index:1;
+    position: fixed;
+    top: var(--navbar-h);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    z-index: 1;
   }
 
-  /* ── Strips Track ── */
+  /* Strips track */
   #strips-track {
     display: flex;
     height: 100%;
-    position: absolute; top:0; left:0;
+    position: absolute;
+    top: 0;
+    left: 0;
     will-change: transform;
   }
 
-  /* ── Individual Strip ── */
+  /* Strips styling */
   .strip {
     flex-shrink: 0;
     width: var(--strip-w);
@@ -309,7 +247,6 @@
   .strip:hover .strip-label { opacity:1; }
   .strip:hover .strip-overlay { opacity:.1; }
 
-  /* Mobile: 1 strip visible at a time */
   @media (max-width: 767px) {
     :root { --strip-w: 82vw; }
     .strip:hover { width: var(--strip-w); }
@@ -318,7 +255,6 @@
     :root { --strip-w: 50vw; }
   }
 
-  .strip-canvas { display:none; }
   .strip-img {
     position:absolute; inset:0; background-size:cover; background-position:center;
     opacity:.55; transition:opacity .5s,transform .8s cubic-bezier(.76,0,.24,1),filter .5s;
@@ -333,7 +269,6 @@
     opacity:.5; transition:opacity .4s,color .4s; z-index:10; color:var(--fg);
     text-shadow:0 2px 4px rgba(0,0,0,.6);
   }
-
   .strip-label {
     position:absolute; bottom:36px; left:20px; right:20px; z-index:10;
     opacity:.85; transition:opacity .4s .1s;
@@ -342,34 +277,43 @@
   .strip-label h3 { font-family:'Bebas Neue',sans-serif; font-size:clamp(22px,5vw,26px); letter-spacing:.04em; line-height:1; color:var(--fg); }
   .strip-label p { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-top:5px; }
 
-  /* ── Edge vignettes ── */
+  /* Vignettes (adjusted for top bar offset) */
   #vignette-left, #vignette-right {
-    position:fixed; top:0; bottom:0; width:80px; z-index:10; pointer-events:none;
+    position: fixed;
+    top: var(--navbar-h);
+    bottom: 0;
+    width: 80px;
+    z-index: 10;
+    pointer-events: none;
   }
-  #vignette-left  { left:0;  background:linear-gradient(to right,var(--bg) 0%,transparent 100%); }
-  #vignette-right { right:0; background:linear-gradient(to left, var(--bg) 0%,transparent 100%); }
+  #vignette-left  { left: 0; background: linear-gradient(to right, var(--bg) 0%, transparent 100%); }
+  #vignette-right { right: 0; background: linear-gradient(to left, var(--bg) 0%, transparent 100%); }
   @media (max-width: 767px) {
     #vignette-left, #vignette-right { width: 40px; }
   }
 
-  /* ── Nav Arrows ── */
+  /* Navigation arrows (repositioned vertically inside view) */
   .nav-arrow {
-    position: fixed; top: 50%; z-index: 20;
+    position: fixed;
+    top: 50%;
     transform: translateY(-50%);
-    width: 44px; height: 44px;
+    z-index: 20;
+    width: 44px;
+    height: 44px;
     border: 1px solid rgba(240,236,228,.25);
     border-radius: 50%;
-    background: rgba(8,8,8,.6);
+    background: rgba(8,8,8,.65);
     backdrop-filter: blur(6px);
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: none;
     opacity: 0;
     transition: opacity .3s, border-color .3s, background .3s;
     pointer-events: all;
-    -webkit-tap-highlight-color: transparent;
   }
-  #arrow-left  { left: 12px; }
-  #arrow-right { right: 12px; }
+  #arrow-left  { left: 18px; }
+  #arrow-right { right: 18px; }
   .nav-arrow svg { width: 16px; height: 16px; stroke: var(--fg); stroke-width: 1.5; fill: none; transition: stroke .3s; }
   body:not(.expanded) .nav-arrow { opacity: .55; }
   .nav-arrow:hover { opacity: 1 !important; border-color: var(--accent); background: rgba(200,184,154,.12); }
@@ -383,7 +327,29 @@
     #arrow-right { right: 8px; }
   }
 
-  /* ── Expanded View ── */
+  /* Center Title (offset due to top bar) */
+  #center-title {
+    position: fixed;
+    top: calc(50% + (var(--navbar-h) / 2.5));
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    pointer-events: none;
+    text-align: center;
+    mix-blend-mode: exclusion;
+    width: 90vw;
+  }
+  #center-title h1 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size:clamp(15px,7.5vw,60px); letter-spacing:-.01em; line-height:.9; color:var(--fg);
+  }
+  #center-title .sub {
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:11px; letter-spacing:.4em; text-transform:uppercase; color:var(--accent); margin-top:14px;
+  }
+  .char { display:inline-block; }
+
+  /* Expanded View (fullscreen) */
   #expanded-view {
     position:fixed; inset:0; z-index:200; background:var(--bg); opacity:0; pointer-events:none; display:flex;
   }
@@ -394,7 +360,6 @@
     display:flex; flex-direction:column; justify-content:flex-end;
     border-left:1px solid rgba(240,236,228,.08);
   }
-
   @media (max-width: 767px) {
     #expanded-view { flex-direction: column; overflow-y: auto; }
     #exp-image { flex: 0 0 45vh; width: 100%; min-height: 200px; }
@@ -402,16 +367,12 @@
       width: 100%; padding: 28px 24px 36px;
       border-left: none;
       border-top: 1px solid rgba(240,236,228,.08);
-      flex: 1;
+      flex:1;
       justify-content: flex-start;
       overflow-y: auto;
     }
     #exp-close { top: 16px; right: 16px; font-size: 10px; padding: 6px 14px; }
   }
-  @media (min-width: 768px) and (max-width: 1023px) {
-    #exp-info { width: min(380px, 45vw); padding: 60px 32px; }
-  }
-
   #exp-count { font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; opacity:0; }
   #exp-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(36px,5vw,80px); line-height:.9; color:var(--fg); overflow:hidden; }
   #exp-title span { display:block; transform:translateY(100%); }
@@ -422,33 +383,20 @@
     background:transparent; border:1px solid var(--accent); color:var(--fg);
     font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase;
     padding:14px 28px; margin-top:24px; cursor:none; transition:background .3s,color .3s; opacity:0; width:fit-content;
-    -webkit-tap-highlight-color: transparent;
     border-radius: 4px;
   }
   #exp-add-to-cart:hover { background:var(--accent); color:var(--bg); }
-  @media (max-width: 767px) {
-    #exp-add-to-cart { width: 100%; text-align: center; padding: 16px; margin-top: 20px; }
-  }
   #exp-close {
     position:absolute; top:24px; right:24px;
     font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:.3em; text-transform:uppercase;
-    color:var(--fg); cursor:none; opacity:1;
-    transition:background .25s, border-color .25s, color .25s;
-    -webkit-tap-highlight-color: transparent;
-    padding: 7px 18px;
-    border: 1px solid rgba(240,236,228,.35);
-    border-radius: 999px;
-    background: rgba(8,8,8,.55);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    color:var(--fg); cursor:none;
+    padding: 7px 18px; border: 1px solid rgba(240,236,228,.35); border-radius: 999px;
+    background: rgba(8,8,8,.55); backdrop-filter: blur(8px);
+    transition: background .25s, border-color .25s;
   }
-  #exp-close:hover {
-    background: rgba(200,184,154,.18);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  #exp-close:hover { background: rgba(200,184,154,.18); border-color: var(--accent); color: var(--accent); }
 
-  /* ── Cart Sidebar ── */
+  /* Cart Sidebar (unchanged) */
   #cart-sidebar {
     position:fixed; top:0; right:0; width:min(400px,92vw); height:100vh;
     background:var(--bg); border-left:1px solid rgba(240,236,228,.1);
@@ -461,22 +409,22 @@
   #cart-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; border-bottom:1px solid rgba(240,236,228,.1); padding-bottom:16px; }
   #cart-close { cursor:none; opacity:.5; transition:opacity .2s; padding: 8px; }
   #cart-close:hover { opacity:1; }
-  #cart-items { flex:1; overflow-y:auto; margin-bottom:16px; -webkit-overflow-scrolling: touch; }
+  #cart-items { flex:1; overflow-y:auto; margin-bottom:16px; }
   .cart-item { display:flex; gap:14px; margin-bottom:20px; border-bottom:1px solid rgba(240,236,228,.05); padding-bottom:14px; }
   .cart-item-img { width:56px; height:56px; flex-shrink:0; background-size:cover; background-position:center; filter:grayscale(.5); }
   .cart-item-info { flex:1; min-width:0; }
   .cart-item-title { font-family:'Bebas Neue',sans-serif; font-size:16px; letter-spacing:.05em; }
   .cart-item-category { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:.15em; color:var(--accent); margin:3px 0; }
   .cart-item-price { font-family:'Barlow',sans-serif; font-size:13px; color:var(--fg); }
-  .cart-item-remove { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:.15em; color:rgba(240,236,228,.3); cursor:pointer; transition:color .2s; margin-top:4px; display:inline-block; padding: 4px 0; }
+  .cart-item-remove { font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:.15em; color:rgba(240,236,228,.3); cursor:pointer; transition:color .2s; display:inline-block; margin-top:4px; }
   .cart-item-remove:hover { color:#ff5e5e; }
   #cart-footer { border-top:1px solid rgba(240,236,228,.1); padding-top:16px; }
   #cart-total { display:flex; justify-content:space-between; font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:.1em; margin-bottom:20px; }
-  #cart-checkout { background:var(--accent); border:none; color:var(--bg); font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; padding:16px 0; width:100%; cursor:pointer; transition:opacity .3s; -webkit-tap-highlight-color:transparent; }
+  #cart-checkout { background:var(--accent); border:none; color:var(--bg); font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:.2em; text-transform:uppercase; padding:16px 0; width:100%; cursor:pointer; transition:opacity .3s; }
   #cart-checkout:hover { opacity:.8; }
   #cart-empty { font-family:'Barlow',sans-serif; color:rgba(240,236,228,.3); text-align:center; margin-top:40px; font-size:13px; }
 
-  /* ── Loader ── */
+  /* Loader */
   #loader { position:fixed; inset:0; background:var(--bg); z-index:1000; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:20px; }
   #loader-num { font-family:'Bebas Neue',sans-serif; font-size:80px; color:var(--fg); }
   #loader-bar-wrap { width:180px; height:1px; background:rgba(240,236,228,.12); }
@@ -496,50 +444,29 @@
   <div id="cursor-label">Ver Projeto</div>
 </div>
 
-<header>
-  <img src="logo.svg" alt="Hybridbots" class="logo-img" />
-
-  <!-- Desktop nav -->
-  <ul class="nav-items">
-    <li id="portfolio-btn">Portfólio</li>
-    <li id="whatsapp-btn">Whatsapp</li>
-    <li id="cart-menu">Carrinho (<span id="cart-count">0</span>)</li>
-  </ul>
-
-  <!-- Mobile nav: carrinho + hambúrguer -->
-  <div id="mobile-nav">
-    <!-- Ícone carrinho -->
-    <div id="mobile-cart-btn" aria-label="Carrinho">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-        <line x1="3" y1="6" x2="21" y2="6"/>
-        <path d="M16 10a4 4 0 01-8 0"/>
-      </svg>
-      <span id="mobile-cart-badge">0</span>
-    </div>
-
-    <!-- Hambúrguer -->
-    <div id="hamburger-btn" aria-label="Menu">
-      <span class="ham-line"></span>
-      <span class="ham-line"></span>
-      <span class="ham-line"></span>
-    </div>
+<!-- ════════════════════════════════════════
+     TOP HORIZONTAL NAVIGATION (replaces left sidebar)
+════════════════════════════════════════ -->
+<nav id="top-navbar">
+  <div class="nav-brand">
+    <img src="logo.jpg" alt="Hybridbots" />
+    <span class="brand-text">HYBRIDBOTS STUDIO</span>
   </div>
-</header>
-
-<!-- Dropdown mobile -->
-<div id="mobile-dropdown">
-  <div class="dropdown-item" id="dd-portfolio">
-    <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-    Portfólio
+  <div class="nav-icons">
+    <button class="top-nav-btn" id="top-portfolio" data-tip="PORTFÓLIO">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </button>
+    <button class="top-nav-btn" id="top-whatsapp" data-tip="WHATSAPP">
+      <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    </button>
+    <button class="top-nav-btn" id="top-cart" data-tip="CARRINHO">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-badge" id="top-cart-badge">0</span>
+    </button>
   </div>
-  <div class="dropdown-divider"></div>
-  <div class="dropdown-item" id="dd-whatsapp">
-    <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-    Whatsapp
-  </div>
-</div>
+</nav>
 
+<!-- Center Title (moved down due to top bar) -->
 <div id="center-title">
   <h1 id="main-title">ADQUIRA<br>NOSSOS PROJETOS</h1>
   <p class="sub">Hybridbots</p>
@@ -585,9 +512,7 @@
 </div>
 
 <script>
-// ─────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────
+// ========== DATA ==========
 const projects = [
   { title:'IRRIGADOR AUTOMÁTICO',  category:'Robótica',     desc:'Sistema inteligente com sensor de umidade do solo e microcontrolador. Otimiza o uso da água e mantém suas plantas sempre saudáveis',                color:'#2a1f14', accent2:'#6b4c2a', image:'imgs/proj_08.jpg', price:199.90 },
   { title:'GAME ARCADE',  category:'Robótica',     desc:'Jogo inspirado no Angry Birds com sistema automático de pontuação. Desenvolvido para integração entre programação e eletrônica.',               color:'#0d1a26', accent2:'#1a4a6b', image:'imgs/proj_10.jpg', price:249.90 },
@@ -597,21 +522,19 @@ const projects = [
   { title:'ROBÔ GALINHA',     category:'Robótica',    desc:'Robô seguidor de linha desenvolvido para ensino de lógica de programação e robótica. Sensores infravermelhos, controle de motores e aprendizado prático.',        color:'#101020', accent2:'#252550', image:'imgs/proj_06.jpg', price:189.90 }
 ];
 
-// ─────────────────────────────────────────
-// CURSOR
-// ─────────────────────────────────────────
+// ========== CURSOR ==========
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
 (function tick(){
   rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
-  document.getElementById('cursor').style.transform=`translate(${mx}px,${my}px)`;
-  document.getElementById('cursor-ring').style.transform=`translate(${rx-mx-20}px,${ry-my-20}px)`;
+  const curs = document.getElementById('cursor');
+  if(curs) curs.style.transform=`translate(${mx}px,${my}px)`;
+  const ring = document.getElementById('cursor-ring');
+  if(ring) ring.style.transform=`translate(${rx-mx-20}px,${ry-my-20}px)`;
   requestAnimationFrame(tick);
 })();
 
-// ─────────────────────────────────────────
-// CART
-// ─────────────────────────────────────────
+// ========== CART SYSTEM ==========
 let cart=[];
 function addToCart(p){
   const e=cart.find(i=>i.id===p.title);
@@ -623,15 +546,11 @@ function addToCart(p){
 function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); updateCartUI(); }
 function updateCartUI(){
   const total = cart.reduce((a,i)=>a+i.quantity,0);
-
-  // Desktop count
-  document.getElementById('cart-count').textContent = total;
-
-  // Mobile badge
-  const badge = document.getElementById('mobile-cart-badge');
-  badge.textContent = total;
-  badge.classList.toggle('visible', total > 0);
-
+  const badge = document.getElementById('top-cart-badge');
+  if(badge){
+    badge.textContent = total;
+    badge.classList.toggle('visible', total>0);
+  }
   const el=document.getElementById('cart-items');
   if(!cart.length){ el.innerHTML='<div id="cart-empty">Seu carrinho está vazio</div>'; }
   else{
@@ -642,75 +561,34 @@ function updateCartUI(){
 }
 
 const cartSidebar = document.getElementById('cart-sidebar');
-const cartMenu    = document.getElementById('cart-menu');
-
-document.getElementById('cart-close').addEventListener('click',e=>{e.stopPropagation();cartSidebar.classList.remove('open');});
-cartMenu.addEventListener('click',e=>{e.stopPropagation();cartSidebar.classList.add('open');});
-document.addEventListener('click',e=>{if(!cartSidebar.contains(e.target)&&!cartMenu.contains(e.target)&&!document.getElementById('mobile-cart-btn').contains(e.target))cartSidebar.classList.remove('open');});
+document.getElementById('cart-close').addEventListener('click',()=>cartSidebar.classList.remove('open'));
 function openCartSidebar(){ cartSidebar.classList.add('open'); }
 
-// ─────────────────────────────────────────
-// MOBILE CART BUTTON
-// ─────────────────────────────────────────
-document.getElementById('mobile-cart-btn').addEventListener('click', e => {
-  e.stopPropagation();
-  closeDropdown();
-  cartSidebar.classList.toggle('open');
+// Top navigation buttons
+document.getElementById('top-cart').addEventListener('click', (e) => { e.stopPropagation(); cartSidebar.classList.toggle('open'); });
+document.getElementById('top-portfolio').addEventListener('click', () => { window.open('https://ctrlplayfran.github.io/Portfolio-Hybridbots-Francielly/', '_blank'); });
+document.getElementById('top-whatsapp').addEventListener('click', () => { window.open('https://wa.me/5511999999999', '_blank'); });
+
+document.addEventListener('click', e=>{
+  const topCart = document.getElementById('top-cart');
+  if(!cartSidebar.contains(e.target) && !topCart.contains(e.target)) cartSidebar.classList.remove('open');
 });
 
-// ─────────────────────────────────────────
-// HAMBURGER MENU
-// ─────────────────────────────────────────
-const hamburgerBtn   = document.getElementById('hamburger-btn');
-const mobileDropdown = document.getElementById('mobile-dropdown');
-let dropdownOpen = false;
-
-function openDropdown() {
-  dropdownOpen = true;
-  hamburgerBtn.classList.add('open');
-  mobileDropdown.classList.add('open');
-}
-function closeDropdown() {
-  dropdownOpen = false;
-  hamburgerBtn.classList.remove('open');
-  mobileDropdown.classList.remove('open');
-}
-function toggleDropdown() {
-  dropdownOpen ? closeDropdown() : openDropdown();
-}
-
-hamburgerBtn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown(); });
-
-document.addEventListener('click', e => {
-  if (!mobileDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-    closeDropdown();
-  }
-});
-
-document.getElementById('dd-portfolio').addEventListener('click', () => {
-  closeDropdown();
-  window.open('https://ctrlplayfran.github.io/Portfolio-Hybridbots-Francielly/', '_blank');
-});
-document.getElementById('dd-whatsapp').addEventListener('click', () => {
-  closeDropdown();
-  window.open('https://wa.me/5511999999999', '_blank');
-});
-
-// Desktop links (mantidos)
-document.getElementById('portfolio-btn').addEventListener('click',()=>window.open('https://ctrlplayfran.github.io/Portfolio-Hybridbots-Francielly/','_blank'));
-document.getElementById('whatsapp-btn').addEventListener('click',()=>window.open('https://wa.me/5511999999999','_blank'));
-
-// ─────────────────────────────────────────
-// GSAP
-// ─────────────────────────────────────────
-CustomEase.create('premium','M0,0 C0.16,1 0.3,1 1,1');
-CustomEase.create('reveal', 'M0,0 C0.25,0.1 0.25,1 1,1');
-
-// ─────────────────────────────────────────
-// BUILD STRIPS TRACK  (3 copies for seamless loop)
-// ─────────────────────────────────────────
+// ========== STRIPS & INFINITE SCROLL ==========
 const track = document.getElementById('strips-track');
-const SETS  = 3;
+const SETS = 3;
+const N_PROJ = projects.length;
+let scrollPx = 0;
+let expanded = false;
+let animating = false;
+const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+let speed = IS_TOUCH ? 0.3 : 0.45;
+let speedSlow = 0.08;
+function stripW() { const s = track.querySelector('.strip'); return s ? s.getBoundingClientRect().width : window.innerWidth/3; }
+function setW() { return stripW() * N_PROJ; }
+
+function pauseScroll() { speed = speedSlow; }
+function resumeScroll() { if(!expanded) speed = IS_TOUCH ? 0.3 : 0.45; }
 
 for(let s=0;s<SETS;s++){
   projects.forEach((p,i)=>{
@@ -725,53 +603,27 @@ for(let s=0;s<SETS;s++){
       <div class="strip-label"><h3>${p.title}</h3><p>${p.category}</p></div>
     `;
     track.appendChild(strip);
-
     strip.addEventListener('mouseenter',()=>{ document.body.classList.add('hovering-strip'); pauseScroll(); });
     strip.addEventListener('mouseleave',()=>{ document.body.classList.remove('hovering-strip'); resumeScroll(); });
     strip.addEventListener('click',()=>openProject(i));
   });
 }
 
-// ─────────────────────────────────────────
-// INFINITE SCROLL
-// ─────────────────────────────────────────
-const N_PROJ  = projects.length;
-let scrollPx  = 0;
-let expanded  = false;
-let animating = false;
-
-const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-
-const SPEED_NORMAL = IS_TOUCH ? 0.3 : 0.45;
-const SPEED_SLOW   = 0.08;
-let speed = SPEED_NORMAL;
-
-function stripW() {
-  const s = track.querySelector('.strip');
-  return s ? s.getBoundingClientRect().width : window.innerWidth / 3;
-}
-function setW(){ return stripW() * N_PROJ; }
-
-function pauseScroll()  { speed = SPEED_SLOW; }
-function resumeScroll() { if(!expanded) speed = SPEED_NORMAL; }
-
-;(function loop(){
+(function loop(){
   if(!expanded){
     scrollPx -= speed;
     const w = setW();
     if(scrollPx <= -w) scrollPx += w;
-    if(scrollPx > 0)   scrollPx -= w;
+    if(scrollPx > 0) scrollPx -= w;
     track.style.transform=`translateX(${scrollPx}px)`;
   }
   requestAnimationFrame(loop);
 })();
 
-// ── Touch swipe on the strips viewport ──
-let touchStartX = 0;
-let touchStartScrollPx = 0;
-let isSwiping = false;
-
-document.getElementById('strips-viewport').addEventListener('touchstart', e => {
+// Touch swipe
+let touchStartX = 0, touchStartScrollPx = 0, isSwiping = false;
+const viewport = document.getElementById('strips-viewport');
+viewport.addEventListener('touchstart', e => {
   touchStartX = e.touches[0].clientX;
   const w = setW();
   scrollPx = -( (((-scrollPx) % w) + w) % w );
@@ -779,9 +631,8 @@ document.getElementById('strips-viewport').addEventListener('touchstart', e => {
   isSwiping = true;
   speed = 0;
 }, { passive: true });
-
-document.getElementById('strips-viewport').addEventListener('touchmove', e => {
-  if (!isSwiping) return;
+viewport.addEventListener('touchmove', e => {
+  if(!isSwiping) return;
   const dx = e.touches[0].clientX - touchStartX;
   const w = setW();
   let raw = touchStartScrollPx + dx;
@@ -789,14 +640,11 @@ document.getElementById('strips-viewport').addEventListener('touchmove', e => {
   scrollPx = raw;
   track.style.transform = `translateX(${scrollPx}px)`;
 }, { passive: true });
-
-document.getElementById('strips-viewport').addEventListener('touchend', e => {
-  if (!isSwiping) return;
+viewport.addEventListener('touchend', e => {
+  if(!isSwiping) return;
   isSwiping = false;
   const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) < 8) {
-    // handled by click event on strip
-  } else {
+  if(Math.abs(dx) < 8) {} else {
     const sw = stripW();
     const snapped = Math.round(-scrollPx / sw) * -sw;
     const start = scrollPx, target = snapped;
@@ -807,39 +655,16 @@ document.getElementById('strips-viewport').addEventListener('touchend', e => {
       const p = Math.min((performance.now()-t0)/dur, 1);
       scrollPx = start + (tNorm - start) * ease(p);
       track.style.transform = `translateX(${scrollPx}px)`;
-      if(p < 1) requestAnimationFrame(snap);
+      if(p<1) requestAnimationFrame(snap);
       else resumeScroll();
     })();
   }
   resumeScroll();
 }, { passive: true });
 
-// ─────────────────────────────────────────
-// TITLE SPLIT
-// ─────────────────────────────────────────
-function splitLetters(el){
-  const txt=el.innerText; el.innerHTML='';
-  for(const line of txt.split('\n')){
-    const d=document.createElement('div');
-    d.style.overflow='hidden';d.style.display='block';
-    for(const ch of line){
-      const s=document.createElement('span');
-      s.className='char';s.textContent=ch===' '?'\u00A0':ch;
-      d.appendChild(s);
-    }
-    el.appendChild(d);
-  }
-  return el.querySelectorAll('.char');
-}
-const chars=splitLetters(document.getElementById('main-title'));
-
-// ─────────────────────────────────────────
-// ARROW BUTTONS
-// ─────────────────────────────────────────
-const JUMP_PX = () => window.innerWidth / 3;
-
-function scrollBy(dir) {
-  const jump = JUMP_PX() * dir;
+// Arrows
+function scrollBy(dir){
+  const jump = stripW() * dir;
   const target = scrollPx - jump;
   const prevSpeed = speed;
   speed = 0;
@@ -848,38 +673,36 @@ function scrollBy(dir) {
   const t0 = performance.now();
   function ease(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t; }
   function step(){
-    const elapsed = performance.now() - t0;
-    const progress = Math.min(elapsed / duration, 1);
-    scrollPx = start + (target - start) * ease(progress);
+    const elapsed = performance.now()-t0;
+    const progress = Math.min(elapsed/duration,1);
+    scrollPx = start + (target-start)*ease(progress);
     const limit = setW();
     if(scrollPx <= -limit) scrollPx += limit;
     if(scrollPx > 0) scrollPx -= limit;
     track.style.transform = `translateX(${scrollPx}px)`;
-    if(progress < 1) requestAnimationFrame(step);
+    if(progress<1) requestAnimationFrame(step);
     else speed = prevSpeed;
   }
   requestAnimationFrame(step);
 }
+document.getElementById('arrow-left').addEventListener('click',()=>scrollBy(-1));
+document.getElementById('arrow-right').addEventListener('click',()=>scrollBy(1));
 
-document.getElementById('arrow-left').addEventListener('click',  () => scrollBy(-1));
-document.getElementById('arrow-right').addEventListener('click', () => scrollBy(1));
-
-// ─────────────────────────────────────────
-const expView  =document.getElementById('expanded-view');
-const expImage =document.getElementById('exp-image');
-const expCount =document.getElementById('exp-count');
-const expCat   =document.getElementById('exp-category');
-const expDesc  =document.getElementById('exp-desc');
-const expPrice =document.getElementById('exp-price');
-const expAddBtn=document.getElementById('exp-add-to-cart');
-const expEls   =[expCount,expCat,expDesc,expPrice,expAddBtn];
-let curIdx=null;
+// ========== EXPANDED VIEW ==========
+const expView = document.getElementById('expanded-view');
+const expImage = document.getElementById('exp-image');
+const expCount = document.getElementById('exp-count');
+const expCat = document.getElementById('exp-category');
+const expDesc = document.getElementById('exp-desc');
+const expPrice = document.getElementById('exp-price');
+const expAddBtn = document.getElementById('exp-add-to-cart');
+const expEls = [expCount, expCat, expDesc, expPrice, expAddBtn];
+let curIdx = null;
 
 function openProject(idx){
-  if(expanded||animating)return;
+  if(expanded||animating) return;
   animating=true; expanded=true; curIdx=idx;
   pauseScroll();
-  closeDropdown();
   document.body.classList.add('expanded');
   const p=projects[idx];
   expImage.style.backgroundImage=`url('${p.image}')`;
@@ -890,57 +713,61 @@ function openProject(idx){
   gsap.set('#exp-title span',{y:'100%'});
   gsap.set(expEls,{opacity:0,y:20});
   const tl=gsap.timeline({onComplete:()=>{animating=false;}});
-  tl.to('#center-title',{opacity:0,duration:.25,ease:'power2.out'},0)
-    .to('#strips-viewport',{opacity:0,duration:.4,ease:'power2.out'},0)
+  tl.to('#center-title',{opacity:0,duration:.25},0)
+    .to('#strips-viewport',{opacity:0,duration:.4},0)
     .to(['#vignette-left','#vignette-right'],{opacity:0,duration:.3},0)
-    .to(expView,{opacity:1,duration:.45,ease:'premium',onStart:()=>expView.classList.add('active')},0.2)
-    .to('#exp-title span',{y:'0%',duration:.9,ease:'reveal'},0.35)
-    .to(expEls,{opacity:1,y:0,duration:.6,stagger:.1,ease:'premium'},0.5);
+    .to(expView,{opacity:1,duration:.45,onStart:()=>expView.classList.add('active')},0.2)
+    .to('#exp-title span',{y:'0%',duration:.9,ease:'back.out(0.7)'},0.35)
+    .to(expEls,{opacity:1,y:0,duration:.6,stagger:.1},0.5);
 }
-
 document.getElementById('exp-close').addEventListener('click',closeProject);
 function closeProject(){
-  if(!expanded||animating)return;
+  if(!expanded||animating) return;
   animating=true;
   const tl=gsap.timeline({onComplete:()=>{
-    expanded=false;animating=false;
+    expanded=false; animating=false;
     expView.classList.remove('active');
     gsap.set('#exp-title span',{y:'100%'});
     gsap.set(expEls,{opacity:0,y:20});
     gsap.set(expView,{opacity:0});
     resumeScroll();
-    rx=mx;ry=my;
-    document.body.classList.remove('hovering-strip');
-    document.body.classList.remove('expanded');
+    document.body.classList.remove('hovering-strip','expanded');
   }});
   tl.to(expEls,{opacity:0,y:-10,duration:.3,stagger:.04},0)
-    .to('#exp-title span',{y:'-100%',duration:.4,ease:'premium'},0.05)
-    .to(expView,{opacity:0,duration:.4,ease:'premium'},0.15)
-    .to('#strips-viewport',{opacity:1,duration:.5,ease:'premium'},0.3)
+    .to('#exp-title span',{y:'-100%',duration:.4},0.05)
+    .to(expView,{opacity:0,duration:.4},0.15)
+    .to('#strips-viewport',{opacity:1,duration:.5},0.3)
     .to(['#vignette-left','#vignette-right'],{opacity:1,duration:.4},0.3)
-    .to('#center-title',{opacity:1,duration:.5,ease:'premium'},0.4);
+    .to('#center-title',{opacity:1,duration:.5},0.4);
 }
-
 expAddBtn.addEventListener('click',e=>{
   e.stopPropagation();
-  if(curIdx!==null){
-    addToCart(projects[curIdx]);
-    gsap.to(expAddBtn,{scale:1.05,duration:.15,yoyo:true,repeat:1,ease:'power2.out'});
-  }
+  if(curIdx!==null){ addToCart(projects[curIdx]); gsap.to(expAddBtn,{scale:1.05,duration:.15,yoyo:true,repeat:1}); }
 });
 
-// ─────────────────────────────────────────
-// PARALLAX TITLE (desktop only)
-// ─────────────────────────────────────────
-if (!IS_TOUCH) {
+// ========== TITLE SPLIT ==========
+function splitLetters(el){
+  const txt=el.innerText; el.innerHTML='';
+  for(const line of txt.split('\n')){
+    const d=document.createElement('div'); d.style.overflow='hidden'; d.style.display='block';
+    for(const ch of line){
+      const s=document.createElement('span'); s.className='char'; s.textContent=ch===' '?'\u00A0':ch;
+      d.appendChild(s);
+    }
+    el.appendChild(d);
+  }
+  return el.querySelectorAll('.char');
+}
+const chars=splitLetters(document.getElementById('main-title'));
+
+// ========== PARALLAX TITLE ==========
+if(!IS_TOUCH){
   document.addEventListener('mousemove',e=>{
-    gsap.to('#center-title',{x:(e.clientX/innerWidth-.5)*18,y:(e.clientY/innerHeight-.5)*12,duration:1.2,ease:'power2.out',overwrite:'auto'});
+    gsap.to('#center-title',{x:(e.clientX/innerWidth-.5)*18, y:(e.clientY/innerHeight-.5)*12, duration:1.2, overwrite:'auto'});
   });
 }
 
-// ─────────────────────────────────────────
-// LOADER → INTRO
-// ─────────────────────────────────────────
+// ========== LOADER INTRO ==========
 window.addEventListener('load',()=>{
   gsap.set('#strips-viewport',{opacity:0});
   gsap.set(['#vignette-left','#vignette-right'],{opacity:0});
@@ -949,22 +776,20 @@ window.addEventListener('load',()=>{
   let n=0;
   const iv=setInterval(()=>{
     n+=Math.floor(Math.random()*8)+4;
-    if(n>=100){n=100;clearInterval(iv);startIntro();}
+    if(n>=100){ n=100; clearInterval(iv); startIntro(); }
     num.textContent=n; bar.style.width=n+'%';
   },60);
 });
-
 function startIntro(){
   const tl=gsap.timeline();
-  tl.to('#loader',{opacity:0,duration:.6,ease:'premium',delay:.2})
+  tl.to('#loader',{opacity:0,duration:.6,delay:.2})
     .set('#loader',{display:'none'})
-    .to('#strips-viewport',{opacity:1,duration:1,ease:'power2.out'},0.2)
+    .to('#strips-viewport',{opacity:1,duration:1},0.2)
     .to(['#vignette-left','#vignette-right'],{opacity:.8},0.4)
-    .from(chars,{y:'110%',opacity:0,duration:.9,stagger:.025,ease:'reveal'},0.3)
-    .from('#center-title .sub',{opacity:0,y:10,duration:.6,ease:'premium'},0.9)
-    .from('header',{opacity:0,y:-20,duration:.6,ease:'premium'},0.4);
+    .from(chars,{y:'110%',opacity:0,duration:.9,stagger:.025,ease:'back.out(1)'},0.3)
+    .from('#center-title .sub',{opacity:0,y:10,duration:.6},0.9)
+    .from('#top-navbar',{opacity:0,y:-20,duration:.7},0.2);
 }
-
 updateCartUI();
 </script>
 </body>
